@@ -1,9 +1,20 @@
 import React from "react";
-
-function Login(props) {
+import styles from './index.module.scss'
+import Icon from "@/components/icon";
+function Login() {
     return (
-        <div>Login</div>
-    );
+        <div className={styles.root}>
+            {/* 后退按钮 */}
+            <div className="left">
+                <Icon type="iconfanhui" />
+            </div>
+            {/* 居中标题 */}
+            <div className="title">我是标题</div>
+
+            {/* 右侧内容 */}
+            <div className="right">右侧内容</div>
+        </div>
+    )
 }
 
 export default Login;
