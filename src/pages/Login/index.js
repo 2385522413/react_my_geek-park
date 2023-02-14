@@ -1,10 +1,18 @@
-import React from "react";
+import React, {useState} from "react";
 import NavBar from "@/components/NavBar";
 import styles from "./index.module.scss";
 import Input from "@/components/Input";
 import {useFormik} from "formik";
-import * as Yup from 'yup'
+import * as Yup from "yup";
+import classnames from "classnames";
+import {useDispatch} from "react-redux";
+import {sendCode} from "@/store/action/login";
+import {Toast} from "antd-mobile";
+
 function Login() {
+    const dispatch = useDispatch();
+    //倒计时
+    const [time, setTime] = useState(0);
     // 表单验证
     const formik = useFormik({
         // 设置表单字段的初始值
@@ -28,23 +36,48 @@ function Login() {
         //     console.log(errors);
         //     return errors;
         // }
-
         // yup表单验证
         validationSchema: Yup.object().shape({
             // 手机号验证规则
             mobile: Yup.string()
-                .required('请输入手机号')
-                .matches(/^1[3456789]\d{9}$/, '手机号格式错误'),
+                .required("请输入手机号")
+                .matches(/^1[3456789]\d{9}$/, "手机号格式错误"),
 
             // 手机验证码验证规则
             code: Yup.string()
-                .required('请输入验证码')
-                .matches(/^\d{6}$/, '验证码6个数字')
-        }),
+                .required("请输入验证码")
+                .matches(/^\d{6}$/, "验证码6个数字")
+        })
     });
 
-    const onExtraClick = () => {
-        console.log("hhahah");
+    const onExtraClick = async () => {
+        if (!/^1[3456789]\d{9}$/.test(formik.values.mobile)) {
+            formik.setTouched({
+                mobile: true
+            });
+            return;
+        }
+        try {
+            await dispatch(sendCode(formik.values.mobile));
+            Toast.success("获取验证码成功", 1);
+            //开启倒计时
+            setTime(5)
+            let timeId = setInterval(() => {
+                setTime((time) => {
+                    if (time === 1) {
+                        clearInterval(timeId);
+                    }
+                    return time - 1;
+                });
+            }, 1000);
+
+        } catch (e) {
+            if (e.response) {
+                Toast.info(e.response.data.message, 1);
+            } else {
+                Toast.info("服务器繁忙", 1);
+            }
+        }
     };
     return (
         <div className={styles.root}>
@@ -63,16 +96,16 @@ function Login() {
                             onBlur={formik.handleBlur}
                         >
                         </Input>
-                        {formik.errors.mobile && formik.touched.mobile?
+                        {formik.errors.mobile && formik.touched.mobile ?
                             <div className="validate">{formik.errors.mobile}</div>
-                        :null}
+                            : null}
                     </div>
 
                     {/* 短信验证码输入框 */}
                     <div className="input-item">
                         <Input
                             placeholder="请输入手机号"
-                            extra="获取验证码"
+                            extra={time===0? "获取验证码":time+"s后获取"}
                             onExtraClick={onExtraClick}
                             onChange={formik.handleChange}
                             value={formik.values.code}
@@ -80,13 +113,17 @@ function Login() {
                             onBlur={formik.handleBlur}
                         >
                         </Input>
-                        {formik.errors.code && formik.touched.code?
+                        {formik.errors.code && formik.touched.code ?
                             <div className="validate">{formik.errors.code}</div>
-                            :null}
+                            : null}
                     </div>
 
                     {/* 登录按钮 */}
-                    <button type="submit" className="login-btn">
+                    <button
+                        type="submit"
+                        className={classnames("login-btn", formik.isValid ? "" : "disabled")}
+                        disabled={!formik.isValid}
+                    >
                         登录
                     </button>
                 </form>
