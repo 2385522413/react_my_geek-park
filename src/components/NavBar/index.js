@@ -1,6 +1,6 @@
 import React from "react";
 import styles from './index.module.scss'
-import Icon from "@/components/icon";
+import Icon from "@/components/Icon";
 import {useHistory} from "react-router-dom";
 //import {withRouter} from "react-router-dom";
 

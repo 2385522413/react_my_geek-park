@@ -1,7 +1,7 @@
 import React, {Suspense} from "react";
 import {Route, Redirect, Switch, BrowserRouter as Router} from "react-router-dom";
 
-const Home = React.lazy(() => import("@/pages/Home"));
+const Layout = React.lazy(() => import("@/pages/Layout"));
 const Login = React.lazy(() => import("@/pages/Login"));
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
                     <Switch>
                         <Redirect exact from="/" to="/home"></Redirect>
                         <Route path="/login" component={Login}></Route>
-                        <Route path="/home" component={Home}></Route>
+                        <Route path="/home" component={Layout}></Route>
                     </Switch>
                 </Suspense>
             </div>
