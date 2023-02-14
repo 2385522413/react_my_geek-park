@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {Toast} from "antd-mobile";
 
 // 1. 创建新的 axios 实例
 const http = axios.create({
@@ -13,7 +14,12 @@ http.interceptors.request.use(config => {
 http.interceptors.response.use(response => {
     return response
 }, error => {
-    return Promise.reject(error)
+    if (error.response) {
+        Toast.info(error.response.data.message);
+    } else {
+        Toast.info("网络繁忙");
+    }
+    return Promise.reject(error);
 })
 
 // 3. 导出该 axios 实例

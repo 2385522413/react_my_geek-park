@@ -6,13 +6,16 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import classnames from "classnames";
 import {useDispatch} from "react-redux";
-import {sendCode} from "@/store/action/login";
+import {login, sendCode} from "@/store/action/login";
 import {Toast} from "antd-mobile";
+import {useHistory} from "react-router-dom";
 
 function Login() {
+    const History = useHistory();
     const dispatch = useDispatch();
     //倒计时
     const [time, setTime] = useState(0);
+
     // 表单验证
     const formik = useFormik({
         // 设置表单字段的初始值
@@ -20,9 +23,11 @@ function Login() {
             mobile: "13900001111",
             code: "246810"
         },
-        // 提交
-        onSubmit: values => {
-            console.log(values);
+        // 提交表单
+        onSubmit:async values => {
+            await dispatch(login(values))
+            Toast.success("登录成功", 1);
+            History.push('/home')
         },
         // formik的验证方法
         // validate(values) {
@@ -50,6 +55,7 @@ function Login() {
         })
     });
 
+    //发送验证码
     const onExtraClick = async () => {
         if (!/^1[3456789]\d{9}$/.test(formik.values.mobile)) {
             formik.setTouched({
@@ -57,27 +63,18 @@ function Login() {
             });
             return;
         }
-        try {
-            await dispatch(sendCode(formik.values.mobile));
-            Toast.success("获取验证码成功", 1);
-            //开启倒计时
-            setTime(5)
-            let timeId = setInterval(() => {
-                setTime((time) => {
-                    if (time === 1) {
-                        clearInterval(timeId);
-                    }
-                    return time - 1;
-                });
-            }, 1000);
-
-        } catch (e) {
-            if (e.response) {
-                Toast.info(e.response.data.message, 1);
-            } else {
-                Toast.info("服务器繁忙", 1);
-            }
-        }
+        await dispatch(sendCode(formik.values.mobile));
+        Toast.success("获取验证码成功", 1);
+        //开启倒计时
+        setTime(60);
+        let timeId = setInterval(() => {
+            setTime((time) => {
+                if (time === 1) {
+                    clearInterval(timeId);
+                }
+                return time - 1;
+            });
+        }, 1000);
     };
     return (
         <div className={styles.root}>
@@ -105,7 +102,7 @@ function Login() {
                     <div className="input-item">
                         <Input
                             placeholder="请输入手机号"
-                            extra={time===0? "获取验证码":time+"s后获取"}
+                            extra={time === 0 ? "获取验证码" : time + "s后获取"}
                             onExtraClick={onExtraClick}
                             onChange={formik.handleChange}
                             value={formik.values.code}

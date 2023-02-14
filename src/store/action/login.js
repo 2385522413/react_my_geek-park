@@ -1,4 +1,5 @@
 import http from "@/utils/http"
+import {setTokenInfo} from "@/utils/storage";
 
 /**
  * 发送短信验证码
@@ -9,5 +10,28 @@ export const sendCode = (mobile) => {
     return async (dispatch) => {
       const res=await http.get(`/sms/codes/${mobile}`)
         console.log(res);
+    }
+}
+
+//保存token到redux中
+export const saveToken=(tokenInfo)=>{
+    return {
+        type: 'login/token',
+        payload: tokenInfo
+    }
+}
+
+/**
+ *
+ * @param params
+ * @returns {(function(*): Promise<void>)|*}
+ */
+export const login = params => {
+    return async dispatch => {
+        const res = await http.post('/authorizations', params)
+        //保存token到redux中
+        dispatch(saveToken(res.data.data))
+        //保存token到浏览器
+        setTokenInfo(res.data.data)
     }
 }
