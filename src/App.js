@@ -3,6 +3,7 @@ import {Route, Redirect, Switch, BrowserRouter as Router} from "react-router-dom
 
 const Layout = React.lazy(() => import("@/pages/Layout"));
 const Login = React.lazy(() => import("@/pages/Login"));
+const ProfileEdit = React.lazy(() => import("@/pages/Profile/Edit"));
 
 export default function App() {
     return (
@@ -15,6 +16,7 @@ export default function App() {
                         <Redirect exact from="/" to="/home"></Redirect>
                         <Route path="/login" component={Login}></Route>
                         <Route path="/home" component={Layout}></Route>
+                        <Route path="/profile/edit" component={ProfileEdit}></Route>
                     </Switch>
                 </Suspense>
             </div>
