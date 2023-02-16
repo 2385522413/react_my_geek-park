@@ -19,8 +19,29 @@ export const setUser = user => {
 export const getUser = () => {
     return async dispatch => {
         const res = await http.get('/user')
-        console.log(res);
         dispatch(setUser(res.data.data))
     }
 }
 
+/**
+ * 设置修改个人基本信息
+ * @param {*} user
+ * @returns
+ */
+export const saveProfile = payload => {
+    return {
+        type: 'profile/profile',
+        payload
+    }
+}
+
+/**
+ * 获取修改用户基本信息
+ * @returns thunk
+ */
+export const getProfile = () => {
+    return async dispatch => {
+        const res = await http.get('/user/profile')
+        dispatch(saveProfile(res.data.data))
+    }
+}
