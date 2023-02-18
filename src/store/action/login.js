@@ -1,5 +1,5 @@
 import http from "@/utils/http"
-import {setTokenInfo} from "@/utils/storage";
+import {removeTokenInfo, setTokenInfo} from "@/utils/storage";
 
 /**
  * 发送短信验证码
@@ -33,5 +33,18 @@ export const login = params => {
         dispatch(saveToken(res.data.data))
         //保存token到浏览器
         setTokenInfo(res.data.data)
+    }
+}
+
+/**
+ * 退出
+ * @returns
+ */
+export const logout = () => {
+    return (dispatch) => {
+        removeTokenInfo()
+        dispatch({
+            type: 'login/logout',
+        })
     }
 }

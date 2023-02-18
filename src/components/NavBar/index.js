@@ -2,10 +2,11 @@ import React from "react";
 import styles from "./index.module.scss";
 import Icon from "@/components/Icon";
 import {useHistory} from "react-router-dom";
+import classNames from "classnames";
 
 //import {withRouter} from "react-router-dom";
 
-function NavBar({children, extra, onLeftClick}) {
+function NavBar({children, extra, onLeftClick,className}) {
     const history = useHistory();
     const back = () => {
         if (onLeftClick) {
@@ -16,7 +17,7 @@ function NavBar({children, extra, onLeftClick}) {
 
     };
     return (
-        <div className={styles.root}>
+        <div className={classNames(styles.root,className)}>
             {/* 后退按钮 */}
             <div className="left" onClick={back}>
                 <Icon type="iconfanhui"/>

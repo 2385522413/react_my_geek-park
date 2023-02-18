@@ -9,6 +9,7 @@ export const login = (state = initialState, action) => {
     const { type, payload } = action
     switch (type) {
         case 'login/token': return { ...payload }
+        case 'login/logout': return {}
         default: return state
     }
 
