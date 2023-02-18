@@ -8,10 +8,11 @@ import classnames from "classnames";
 import {useDispatch} from "react-redux";
 import {login, sendCode} from "@/store/action/login";
 import {Toast} from "antd-mobile";
-import {useHistory} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 
 function Login() {
-    const History = useHistory();
+    const location=useLocation()
+    const history = useHistory();
     const dispatch = useDispatch();
     //倒计时
     const [time, setTime] = useState(0);
@@ -27,7 +28,12 @@ function Login() {
         onSubmit:async values => {
             await dispatch(login(values))
             Toast.success("登录成功", 1);
-            History.push('/home')
+            if (location.from) {
+                history.push(location.from.pathname)
+            }else {
+                history.push('/home');
+            }
+
         },
         // formik的验证方法
         // validate(values) {

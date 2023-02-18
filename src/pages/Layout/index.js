@@ -3,6 +3,7 @@ import Icon from "@/components/Icon";
 import styles from "./index.module.scss"
 import classnames from "classnames";
 import {Route, Switch, useHistory, useLocation} from "react-router-dom";
+import {AuthRoute} from "@/components/AuthRoute";
 
 
 const Home = React.lazy(() => import('@/pages/Home'))
@@ -36,7 +37,7 @@ function Layout(props) {
                           <Route path="/home" exact component={Home} />
                           <Route path="/home/question" exact component={QA} />
                           <Route path="/home/video" exact component={Video} />
-                          <Route path="/home/profile" exact component={Profile} />
+                          <AuthRoute path="/home/profile" exact component={Profile} />
                       </Switch>
                   </Suspense>
                 </div>

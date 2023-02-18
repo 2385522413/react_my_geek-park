@@ -1,5 +1,6 @@
 import React, {Suspense} from "react";
 import {Route, Redirect, Switch, BrowserRouter as Router} from "react-router-dom";
+import {AuthRoute} from "@/components/AuthRoute";
 
 const Layout = React.lazy(() => import("@/pages/Layout"));
 const Login = React.lazy(() => import("@/pages/Login"));
@@ -12,13 +13,13 @@ export default function App() {
             <div className="app">
                 {/*<Link to="/login">登录</Link>*/}
                 {/*<Link to="/home">首页</Link>*/}
-                <Suspense fallback={<div>loding...</div>}>
+                <Suspense fallback={<div>loading...</div>}>
                     <Switch>
                         <Redirect exact from="/" to="/home"></Redirect>
                         <Route path="/login" component={Login}></Route>
                         <Route path="/home" component={Layout}></Route>
-                        <Route path="/profile/edit" component={ProfileEdit}></Route>
-                        <Route path="/profile/chat" component={Chat}></Route>
+                        <AuthRoute path="/profile/edit" component={ProfileEdit}></AuthRoute>
+                        <AuthRoute path="/profile/chat" component={Chat}></AuthRoute>
                     </Switch>
                 </Suspense>
             </div>

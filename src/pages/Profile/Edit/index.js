@@ -11,6 +11,7 @@ import EditList from "@/pages/Profile/Edit/components/EditList";
 import {updateAvatar} from "@/store/action/profile";
 import dayjs from "dayjs";
 import {logout} from "@/store/action/login";
+import {hasToken} from "@/utils/storage";
 const alert = Modal.alert
 
 const ProfileEdit = () => {
@@ -49,7 +50,7 @@ const ProfileEdit = () => {
             {
                 title: "女",
                 onClick: () => {
-                    onCommit("gender",0)
+                    onCommit("gender",1)
                 }
             }
         ]
@@ -160,10 +161,14 @@ const ProfileEdit = () => {
                             arrow="horizontal"
                             extra={profile.gender === 0 ? "男" : "女"}
                             onClick={() => {
-                                setOpenList({
-                                    visible: true,
-                                    type: "gender"
-                                });
+                                if (hasToken()) {
+                                    setOpenList({
+                                        visible: true,
+                                        type: "gender"
+                                    });
+                                }else {
+                                    history.push('/login')
+                                }
                             }}
                         >性别</List.Item>
                         <DatePicker
