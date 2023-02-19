@@ -1,6 +1,7 @@
 import React, {Suspense} from "react";
-import {Route, Redirect, Switch, BrowserRouter as Router} from "react-router-dom";
+import {Route, Redirect, Switch, Router} from "react-router-dom";
 import {AuthRoute} from "@/components/AuthRoute";
+import {history} from "@/utils/history";
 
 const Layout = React.lazy(() => import("@/pages/Layout"));
 const Login = React.lazy(() => import("@/pages/Login"));
@@ -9,7 +10,7 @@ const Chat = React.lazy(() => import("@/pages/Profile/Chat"));
 
 export default function App() {
     return (
-        <Router>
+        <Router history={history}>
             <div className="app">
                 {/*<Link to="/login">登录</Link>*/}
                 {/*<Link to="/home">首页</Link>*/}

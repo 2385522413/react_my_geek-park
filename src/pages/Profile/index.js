@@ -9,7 +9,6 @@ const Profile = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const user = useSelector((state)=>state.profile.user);
-    console.log("qqqqq",user);
     // 在进入页面时执行
     useEffect(() => {
         dispatch(getUser())
