@@ -10,6 +10,7 @@ const Home = React.lazy(() => import('@/pages/Home'))
 const QA = React.lazy(() => import('@/pages/QA'))
 const Video = React.lazy(() => import('@/pages/Video'))
 const Profile = React.lazy(() => import('@/pages/Profile'))
+const NotFound = React.lazy(() => import('@/pages/NotFound'))
 // 将 tab 按钮的数据放在一个数组中
 // - id 唯一性ID
 // - title 按钮显示的文本
@@ -38,6 +39,7 @@ function Layout(props) {
                           <Route path="/home/question" exact component={QA} />
                           <Route path="/home/video" exact component={Video} />
                           <AuthRoute path="/home/profile" exact component={Profile} />
+                          <Route component={NotFound}></Route>
                       </Switch>
                   </Suspense>
                 </div>
