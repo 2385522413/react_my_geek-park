@@ -28,10 +28,10 @@ function Login() {
         onSubmit:async values => {
             await dispatch(login(values))
             Toast.success("登录成功", 1);
-            if (location.from) {
-                history.push(location.from.pathname)
+            if (location.state) {
+                history.replace(location.state.from)
             }else {
-                history.push('/home');
+                history.replace('/home');
             }
 
         },
