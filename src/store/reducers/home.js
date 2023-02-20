@@ -1,6 +1,7 @@
 // 初始状态
 const initialState = {
     userChannels: [],
+    allChannels: [],
 }
 
 export const home = (state = initialState, action) => {
@@ -11,6 +12,11 @@ export const home = (state = initialState, action) => {
             return {
                 ...state,
                 userChannels: payload,
+            }
+        case 'home/allChannel':
+            return {
+                ...state,
+                allChannels: payload,
             }
         default:
             return state

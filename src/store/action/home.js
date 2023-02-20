@@ -47,3 +47,29 @@ export const getUserChannels = () => {
         }
     }
 }
+
+/**
+ * 获取所有的频道
+ */
+export const getAllChannels = () => {
+    return async (dispatch) => {
+        // 请求数据
+        const res = await http.get('/channels')
+        const { channels } = res.data.data
+
+        // 将所有频道数据保存到 Redux
+        dispatch(setAllChannels(channels))
+    }
+}
+
+/**
+ * 保存所有的频道
+ * @param {*} channels
+ * @returns
+ */
+export const setAllChannels = (channels) => {
+    return {
+        type: 'home/allChannel',
+        payload: channels,
+    }
+}
