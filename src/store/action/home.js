@@ -73,3 +73,41 @@ export const setAllChannels = (channels) => {
         payload: channels,
     }
 }
+
+// 删除频道
+export const delChannel = (channel) => {
+    return async (dispatch, getState) => {
+        // 获取到所有的userChannels
+        const { userChannels } = getState().home
+        // 如果登录了，发送请求获取频道信息
+        if (hasToken()) {
+            await http.delete(`/user/channels/${channel.id}`)
+        } else {
+            // 如果没有登录，将频道数据保存到本地
+            // 将channels数据保存本地
+            setLocalChannels(userChannels.filter((item) => item.id !== channel.id))
+        }
+        dispatch(
+            setUserChannels(userChannels.filter((item) => item.id !== channel.id))
+        )
+    }
+}
+
+// 添加频道
+export const addChannel = (channel) => {
+    return async (dispatch, getState) => {
+        // 获取到所有的userChannels
+        const { userChannels } = getState().home
+        // 如果登录了，发送请求获取频道信息
+        if (hasToken()) {
+            await http.patch('/user/channels', {
+                channels: [channel],
+            })
+        } else {
+            // 如果没有登录，将频道数据保存到本地
+            // 将channels数据保存本地
+            setLocalChannels([...userChannels, channel])
+        }
+        dispatch(setUserChannels([...userChannels, channel]))
+    }
+}
