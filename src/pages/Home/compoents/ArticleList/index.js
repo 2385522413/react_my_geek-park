@@ -25,8 +25,10 @@ const ArticleList = ({ channelId, aid }) => {
     const [loading, setLoading] = useState(false)
     const [hasMore, setHasMore] = useState(true)
     const loadMore = async () => {
-        // loading的处理
+        // 在加载中，不需要加载
         if (loading) return
+        // 如果不是当前频道，不加载数据
+        if (channelId !== aid) return
         // 没有更多数据的处理
         if (!current.timestamp) {
             setHasMore(false)
