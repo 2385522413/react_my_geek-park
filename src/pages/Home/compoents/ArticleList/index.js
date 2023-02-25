@@ -1,9 +1,9 @@
 import styles from './index.module.scss'
 import ArticleItem from "@/pages/Home/compoents/ArticleItem";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getArticleList} from "@/store/action/home";
-import { PullToRefresh } from 'antd-mobile-v5'
+import {InfiniteScroll, PullToRefresh} from "antd-mobile-v5";
 /**
  * 文章列表组件
  * @param {String} props.channelId 当前文章列表所对应的频道ID
@@ -20,10 +20,31 @@ const ArticleList = ({ channelId, aid }) => {
             dispatch(getArticleList(channelId, Date.now()))
         }
     }, [channelId, aid,dispatch,current])
+
+    //下拉加载更多
+    const [loading, setLoading] = useState(false)
+    const [hasMore, setHasMore] = useState(true)
+    const loadMore = async () => {
+        // loading的处理
+        if (loading) return
+        // 没有更多数据的处理
+        if (!current.timestamp) {
+            setHasMore(false)
+            return
+        }
+        setLoading(true)
+        try {
+            await dispatch(getArticleList(channelId, current.timestamp,true))
+        }finally {
+            setLoading(false)
+        }
+    }
+
     //如果不是当前频道，没有文章数据，先不渲染
     if (!current) return null;
     //下拉刷新
     const onRefresh = () => {
+        setHasMore(true)
         dispatch(getArticleList(channelId, Date.now()))
     }
     return (
@@ -36,6 +57,7 @@ const ArticleList = ({ channelId, aid }) => {
                         </div>
                     ))}
                 </PullToRefresh>
+                <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
             </div>
         </div>
     )

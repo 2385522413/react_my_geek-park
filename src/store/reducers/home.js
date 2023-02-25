@@ -20,16 +20,21 @@ export const home = (state = initialState, action) => {
                 allChannels: payload,
             }
         case 'home/setArticleList':
+            const {timestamp,channelId,list,loadMore}=payload
+            const oldList=state.articles[channelId]?.list
+            //console.log([state.articles[channelId].list,...list]);
             return {
                 ...state,
                 articles: {
                     ...state.articles,
-                    [payload.channelId]: {
-                        timestamp: payload.timestamp,
-                        list: payload.list,
+                    [channelId]: {
+                        timestamp: timestamp,
+                        list: loadMore ?[...oldList,...list] :list
                     },
                 },
             }
+
+
         default:
             return state
     }

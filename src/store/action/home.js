@@ -114,8 +114,7 @@ export const addChannel = (channel) => {
 
 
 //获取文章列表数据
-// 获取文章列表数据
-export const getArticleList = (channelId, timestamp) => {
+export const getArticleList = (channelId, timestamp,loadMore=false) => {
     return async (dispatch) => {
         const res = await http.get('/articles', {
             params: {
@@ -129,6 +128,7 @@ export const getArticleList = (channelId, timestamp) => {
                 channelId,
                 timestamp: res.data.data.pre_timestamp,
                 list: res.data.data.results,
+                loadMore
             })
         )
     }
