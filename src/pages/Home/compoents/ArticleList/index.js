@@ -3,7 +3,7 @@ import ArticleItem from "@/pages/Home/compoents/ArticleItem";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getArticleList} from "@/store/action/home";
-
+import { PullToRefresh } from 'antd-mobile-v5'
 /**
  * 文章列表组件
  * @param {String} props.channelId 当前文章列表所对应的频道ID
@@ -22,15 +22,20 @@ const ArticleList = ({ channelId, aid }) => {
     }, [channelId, aid,dispatch,current])
     //如果不是当前频道，没有文章数据，先不渲染
     if (!current) return null;
-    console.log(current);
+    //下拉刷新
+    const onRefresh = () => {
+        dispatch(getArticleList(channelId, Date.now()))
+    }
     return (
         <div className={styles.root}>
             <div className="articles">
-                {current.list.map((item) => (
-                    <div className="article-item" key={item.art_id}>
-                        <ArticleItem className="article-item" article={item}></ArticleItem>
-                    </div>
-                ))}
+                <PullToRefresh onRefresh={onRefresh}>
+                    {current.list.map((item) => (
+                        <div className="article-item" key={item.art_id}>
+                            <ArticleItem article={item}></ArticleItem>
+                        </div>
+                    ))}
+                </PullToRefresh>
             </div>
         </div>
     )
