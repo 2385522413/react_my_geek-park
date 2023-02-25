@@ -111,3 +111,33 @@ export const addChannel = (channel) => {
         dispatch(setUserChannels([...userChannels, channel]))
     }
 }
+
+
+//获取文章列表数据
+// 获取文章列表数据
+export const getArticleList = (channelId, timestamp) => {
+    return async (dispatch) => {
+        const res = await http.get('/articles', {
+            params: {
+                channel_id: channelId,
+                timestamp: timestamp,
+            },
+        })
+        // 将数据保存到redux中
+        dispatch(
+            setArticleList({
+                channelId,
+                timestamp: res.data.data.pre_timestamp,
+                list: res.data.data.results,
+            })
+        )
+    }
+}
+
+//保存文章列表数据到redux
+export const setArticleList = (payload) => {
+    return {
+        type: 'home/setArticleList',
+        payload,
+    }
+}

@@ -6,6 +6,7 @@ import Icon from "@/components/Icon";
 import styles from "./index.module.scss";
 import Channels from "@/pages/Home/compoents/Channels";
 import {Drawer} from "antd-mobile";
+import ArticleList from "@/pages/Home/compoents/ArticleList";
 
 function Home(props) {
 
@@ -31,7 +32,10 @@ function Home(props) {
     }, [dispatch]);
     return (
         <div className={styles.root}>
-            <Tabs tabs={tabs} index={active} onChange={changeActive}></Tabs>
+            <Tabs tabs={tabs} index={active} onChange={changeActive}>
+                {/* 频道 Tab 对应的内容 */}
+                {tabs.map(ch => <ArticleList key={ch.id} channelId={ch.id} />)}
+            </Tabs>
             {/* 频道 Tab 栏右侧的两个图标按钮：搜索、频道管理 */}
             <div className="tabs-opration">
                 <Icon type="iconbtn_search"/>

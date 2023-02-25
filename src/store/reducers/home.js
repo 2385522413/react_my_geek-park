@@ -2,6 +2,7 @@
 const initialState = {
     userChannels: [],
     allChannels: [],
+    articles:{}
 }
 
 export const home = (state = initialState, action) => {
@@ -17,6 +18,17 @@ export const home = (state = initialState, action) => {
             return {
                 ...state,
                 allChannels: payload,
+            }
+        case 'home/setArticleList':
+            return {
+                ...state,
+                articles: {
+                    ...state.articles,
+                    [payload.channelId]: {
+                        timestamp: payload.timestamp,
+                        list: payload.list,
+                    },
+                },
             }
         default:
             return state
