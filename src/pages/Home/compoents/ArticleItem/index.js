@@ -1,6 +1,7 @@
 import classnames from 'classnames'
 import Icon from '@/components/Icon'
 import styles from './index.module.scss'
+import Img from '@/components/Image'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
 import dayjs from "dayjs";
@@ -29,7 +30,7 @@ const ArticleItem = ({ article }) => {
                     <div className="article-imgs">
                         {images.map((item, i) => (
                             <div className="article-img-wrapper" key={i}>
-                                <img src={item} alt="" />
+                                <Img src={item} alt="" />
                             </div>
                         ))}
                     </div>
