@@ -2,7 +2,14 @@
 const initialState = {
     userChannels: [],
     allChannels: [],
-    articles:{}
+    articles:{},
+    // ...
+    feedbackAction: {
+        // 控制弹出菜单的显示隐藏
+        visible: false,
+        // 当前反馈的目标文章ID
+        articleId: 0
+    }
 }
 
 export const home = (state = initialState, action) => {
@@ -33,7 +40,11 @@ export const home = (state = initialState, action) => {
                     },
                 },
             }
-
+        case 'home/feedback_action':
+            return {
+                ...state,
+                feedbackAction: payload
+            }
 
         default:
             return state

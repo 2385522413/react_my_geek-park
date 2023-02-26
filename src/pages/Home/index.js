@@ -7,7 +7,7 @@ import styles from "./index.module.scss";
 import Channels from "@/pages/Home/compoents/Channels";
 import {Drawer} from "antd-mobile";
 import ArticleList from "@/pages/Home/compoents/ArticleList";
-
+import FeedbackActionMenu from "@/pages/Home/compoents/FeedbackActionMenu";
 function Home(props) {
 
     // 处理频道高亮
@@ -53,6 +53,7 @@ function Home(props) {
                 />}
                 open={drawerVisible}
             />
+            <FeedbackActionMenu></FeedbackActionMenu>
         </div>
 
     );

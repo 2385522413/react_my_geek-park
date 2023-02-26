@@ -141,3 +141,13 @@ export const setArticleList = (payload) => {
         payload,
     }
 }
+/**
+ * 设置举报反馈菜单信息
+ */
+export const setFeedbackAction = ({ visible, articleId }) => ({
+    type: 'home/feedback_action',
+    payload: {
+        visible,
+        articleId,
+    },
+})

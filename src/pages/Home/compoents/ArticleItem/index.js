@@ -1,28 +1,32 @@
-import classnames from 'classnames'
-import Icon from '@/components/Icon'
-import styles from './index.module.scss'
-import Img from '@/components/Image'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import 'dayjs/locale/zh-cn'
+import classnames from "classnames";
+import Icon from "@/components/Icon";
+import styles from "./index.module.scss";
+import Img from "@/components/Image";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/zh-cn";
 import dayjs from "dayjs";
-dayjs.extend(relativeTime)
-dayjs.locale('zh-cn')
-const ArticleItem = ({ article }) => {
+import {useDispatch, useSelector} from "react-redux";
+import {setFeedbackAction} from "@/store/action/home";
+
+dayjs.extend(relativeTime);
+dayjs.locale("zh-cn");
+const ArticleItem = ({article}) => {
+    const dispatch=useDispatch()
     const {
-        cover: { type, images },
+        cover: {type, images},
         title,
         aut_name,
         comm_count,
-        pubdate,
-    } = article
-    //const isLogin = useSelector((state) => !!state.login.token)
+        pubdate
+    } = article;
+    const isLogin = useSelector((state) => !!state.login.token);
     return (
         <div className={styles.root}>
             <div
                 className={classnames(
-                    'article-content',
-                    type === 3 ? 't3' : '',
-                    type === 0 ? 'none-mt' : ''
+                    "article-content",
+                    type === 3 ? "t3" : "",
+                    type === 0 ? "none-mt" : ""
                 )}
             >
                 <h3>{title}</h3>
@@ -30,23 +34,28 @@ const ArticleItem = ({ article }) => {
                     <div className="article-imgs">
                         {images.map((item, i) => (
                             <div className="article-img-wrapper" key={i}>
-                                <Img src={item} alt="" />
+                                <Img src={item} alt=""/>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
-            <div className={classnames('article-info', type === 0 ? 'none-mt' : '')}>
+            <div className={classnames("article-info", type === 0 ? "none-mt" : "")}>
                 <span>{aut_name}</span>
                 <span>{comm_count} 评论</span>
                 <span>{dayjs().from(pubdate)}</span>
 
                 <span className="close">
-          { <Icon type="iconbtn_essay_close" />}
+          {isLogin && <Icon type="iconbtn_essay_close" onClick={()=>{dispatch(setFeedbackAction(
+              {
+                  visible:true,
+                  articleId:article.art_id
+              }
+          ))}}/>}
         </span>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default ArticleItem
+export default ArticleItem;
