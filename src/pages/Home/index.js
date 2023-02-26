@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Tabs from "@/components/Tabs";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllChannels, getUserChannels} from "@/store/action/home";
+import {getAllChannels, getUserChannels, setFeedbackAction} from "@/store/action/home";
 import Icon from "@/components/Icon";
 import styles from "./index.module.scss";
 import Channels from "@/pages/Home/compoents/Channels";
@@ -15,6 +15,11 @@ function Home(props) {
 
     const changeActive = (index) => {
         setActive(index);
+        dispatch(setFeedbackAction({
+            visible:false,
+            articleId:'',
+            channelId:tabs[index].id
+        }))
     };
 
     // 控制抽屉组件

@@ -8,7 +8,9 @@ const initialState = {
         // 控制弹出菜单的显示隐藏
         visible: false,
         // 当前反馈的目标文章ID
-        articleId: 0
+        articleId: 0,
+        //频道id
+        channelId:''
     }
 }
 

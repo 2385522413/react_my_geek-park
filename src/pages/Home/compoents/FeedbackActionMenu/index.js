@@ -1,14 +1,25 @@
 import Icon from '@/components/Icon'
-import { Modal } from 'antd-mobile'
+import {Modal, Toast} from "antd-mobile";
 import { useState } from 'react'
 import styles from './index.module.scss'
 import {useDispatch, useSelector} from "react-redux";
-import {setFeedbackAction} from "@/store/action/home";
+import {reportArticle, setFeedbackAction, unLikeArticle} from "@/store/action/home";
 
 /**
  * 举报反馈菜单
  */
 const FeedbackActionMenu = () => {
+    const list=[
+        {id:0,title:'其他问题'},
+        {id:1,title:'标题夸张'},
+        {id:2,title:'低俗色情'},
+        {id:3,title:'错别字多'},
+        {id:4,title:'旧文重复'},
+        {id:5,title:'内容不实'},
+        {id:6,title:'广告软文'},
+        {id:7,title:'影响心情'},
+        {id:8,title:'违法犯罪'},
+    ]
     const feedbackAction = useSelector(state => state.home.feedbackAction)
     const dispatch = useDispatch();
     // 举报类型：normal 不感兴趣或拉黑作者 | junk 垃圾内容
@@ -20,8 +31,20 @@ const FeedbackActionMenu = () => {
             visible:false,
             articleId:''
         }))
+        setType("normal")
     }
-
+ //不感兴趣
+    const unLike= async ()=>{
+        await dispatch(unLikeArticle(feedbackAction.articleId))
+        onClose();
+        Toast.success("减少为你推荐此类文章")
+    }
+    //举报
+    const report=async (id)=>{
+        await dispatch(reportArticle(feedbackAction.articleId,id))
+        onClose();
+        Toast.success("举报成功")
+    }
     return (
         <div className={styles.root}>
             <Modal
@@ -37,7 +60,7 @@ const FeedbackActionMenu = () => {
                     {/* normal 类型时的菜单内容 */}
                     {type === 'normal' && (
                         <>
-                            <div className="action-item">
+                            <div className="action-item" onClick={unLike}>
                                 <Icon type="iconicon_unenjoy1" /> 不感兴趣
                             </div>
                             <div className="action-item" onClick={() => setType('junk')}>
@@ -58,14 +81,12 @@ const FeedbackActionMenu = () => {
                                 <Icon type="iconfanhui" />
                                 <span className="back-text">反馈垃圾内容</span>
                             </div>
-                            <div className="action-item">旧闻重复</div>
-                            <div className="action-item">广告软文</div>
-                            <div className="action-item">内容不实</div>
-                            <div className="action-item">涉嫌违法</div>
-                            <div className="action-item">
-                                <span className="text">其他问题</span>
-                                <Icon type="iconbtn_right" />
-                            </div>
+
+                            {
+                                list.map((item)=>
+                                    <div key={item.id} className="action-item" onClick={()=>{report(item.id)}}>{item.title}</div>
+                                )
+                            }
                         </>
                     )}
                 </div>

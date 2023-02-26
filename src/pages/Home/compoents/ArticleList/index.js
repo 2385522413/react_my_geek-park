@@ -55,7 +55,7 @@ const ArticleList = ({ channelId, aid }) => {
                 <PullToRefresh onRefresh={onRefresh}>
                     {current.list.map((item) => (
                         <div className="article-item" key={item.art_id}>
-                            <ArticleItem article={item}></ArticleItem>
+                            <ArticleItem article={item} channelId={channelId}></ArticleItem>
                         </div>
                     ))}
                 </PullToRefresh>

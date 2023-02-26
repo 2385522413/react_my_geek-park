@@ -10,7 +10,7 @@ import {setFeedbackAction} from "@/store/action/home";
 
 dayjs.extend(relativeTime);
 dayjs.locale("zh-cn");
-const ArticleItem = ({article}) => {
+const ArticleItem = ({article,channelId}) => {
     const dispatch=useDispatch()
     const {
         cover: {type, images},
@@ -49,7 +49,8 @@ const ArticleItem = ({article}) => {
           {isLogin && <Icon type="iconbtn_essay_close" onClick={()=>{dispatch(setFeedbackAction(
               {
                   visible:true,
-                  articleId:article.art_id
+                  articleId:article.art_id,
+                  channelId
               }
           ))}}/>}
         </span>
