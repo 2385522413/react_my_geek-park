@@ -21,7 +21,7 @@ export const setUserChannels = (channels) => {
     return async (dispatch) => {
         // 请求数据
         const res = await http.get('/user/channels')
-        const { channels } = res.data.data
+        const { channels } = res.data
         // 将频道数据保存到 Redux
         dispatch(setUserChannels(channels))
     }
@@ -31,7 +31,7 @@ export const getUserChannels = () => {
         // 1. 判断用户是否登录
         if (hasToken()) {
             const res = await http.get("/user/channels");
-            dispatch(setUserChannels(res.data.data.channels));
+            dispatch(setUserChannels(res.data.channels));
         } else {
             // 2. 没有token,从本地获取频道数据
             const channels = getLocalChannels();
@@ -41,9 +41,9 @@ export const getUserChannels = () => {
             } else {
                 // 没有token, 且本地没有channels数据
                 const res = await http.get("/user/channels");
-                dispatch(setUserChannels(res.data.data.channels));
+                dispatch(setUserChannels(res.data.channels));
                 // 保存到本地
-                setLocalChannels(res.data.data.channels);
+                setLocalChannels(res.data.channels);
             }
         }
     };
@@ -56,7 +56,7 @@ export const getAllChannels = () => {
     return async (dispatch) => {
         // 请求数据
         const res = await http.get("/channels");
-        const {channels} = res.data.data;
+        const {channels} = res.data;
 
         // 将所有频道数据保存到 Redux
         dispatch(setAllChannels(channels));
@@ -127,8 +127,8 @@ export const getArticleList = (channelId, timestamp, loadMore = false) => {
         dispatch(
             setArticleList({
                 channelId,
-                timestamp: res.data.data.pre_timestamp,
-                list: res.data.data.results,
+                timestamp: res.data.pre_timestamp,
+                list: res.data.results,
                 loadMore
             })
         );

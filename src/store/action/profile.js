@@ -19,7 +19,7 @@ export const setUser = user => {
 export const getUser = () => {
     return async dispatch => {
         const res = await http.get('/user')
-        dispatch(setUser(res.data.data))
+        dispatch(setUser(res.data))
     }
 }
 
@@ -42,7 +42,7 @@ export const saveProfile = payload => {
 export const getProfile = () => {
     return async dispatch => {
         const res = await http.get('/user/profile')
-        dispatch(saveProfile(res.data.data))
+        dispatch(saveProfile(res.data))
     }
 }
 

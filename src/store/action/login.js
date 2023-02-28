@@ -30,9 +30,9 @@ export const login = params => {
     return async dispatch => {
         const res = await http.post('/authorizations', params)
         //保存token到redux中
-        dispatch(saveToken(res.data.data))
+        dispatch(saveToken(res.data))
         //保存token到浏览器
-        setTokenInfo(res.data.data)
+        setTokenInfo(res.data)
     }
 }
 

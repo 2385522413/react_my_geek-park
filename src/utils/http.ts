@@ -1,13 +1,14 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {Toast} from "antd-mobile";
 import {getTokenInfo, setTokenInfo} from "@/utils/storage";
 import store from "@/store";
 import {history} from "@/utils/history";
 import {logout, saveToken} from "@/store/action/login";
-const baseURL="http://toutiao.itheima.net/v1_0"
+
+const baseURL = "http://toutiao.itheima.net/v1_0";
 // 1. 创建新的 axios 实例
 const http = axios.create({
-    timeout:5000,
+    timeout: 5000,
     baseURL
 });
 
@@ -22,9 +23,9 @@ http.interceptors.request.use((config) => {
     return config;
 });
 http.interceptors.response.use(response => {
-        return response;
+        return response.data;
     },
-    async (err) => {
+    async (err: AxiosError<{message:string}>) => {
         // 如果是网络错误
         if (!err.response) {
             Toast.info("网络繁忙，请稍后重试");
@@ -54,14 +55,14 @@ http.interceptors.response.use(response => {
             // 否则会因 http 实例的请求拦截器的作用，携带上老的 token 而不是 refresh_token
             const res = await axios.put(`${baseURL}/authorizations`, null, {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': `Bearer ${refresh_token}`
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": `Bearer ${refresh_token}`
                 }
-            })
+            });
 
             // 将新换到的 Token 信息保存到 Redux 和 LocalStorage 中
             const tokenInfo = {
-                token: res.data.data.token,
+                token: res.data.token,
                 refresh_token
             };
             setTokenInfo(tokenInfo);
