@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 
 const NotFound = () => {
   const [leftSecond, setLeftSecond] = useState(3)
-  const timerRef = useRef(-1)
+  const timerRef:any = useRef(-1)
   const history = useHistory()
 
   useEffect(() => {

@@ -23,7 +23,7 @@ const taBar = [
     { id: 4, title: '我的', path: '/home/profile', icon: 'iconbtn_mine' }
 ]
 
-function Layout(props) {
+function Layout() {
     const history = useHistory()
     const location = useLocation()
 
