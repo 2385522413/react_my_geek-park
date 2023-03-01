@@ -1,11 +1,18 @@
-import React, {useEffect, useRef} from "react";
+import React, {InputHTMLAttributes, useEffect, useRef} from "react";
 import styles from './index.module.scss'
 import classnames from 'classnames'
-function Input({extra,onExtraClick,className,autoFocus,...rest}) {
-    const inputRef = useRef(null);
+interface Props extends InputHTMLAttributes<HTMLInputElement>{
+    extra?:string
+    onExtraClick?:()=>void
+    className?:string
+    autoFocus?:boolean
+    value?:'text'|'password'
+}
+function Input({extra,onExtraClick,className,autoFocus,...rest}:Props) {
+    const inputRef = useRef<HTMLInputElement>(null);
     useEffect(()=>{
         if (autoFocus) {
-            inputRef.current.focus();
+            inputRef.current!.focus();
         }
     },[autoFocus])
     return (
