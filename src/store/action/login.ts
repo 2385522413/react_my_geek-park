@@ -1,20 +1,25 @@
 import http from "@/utils/http"
 import {removeTokenInfo, setTokenInfo} from "@/utils/storage";
+import {Dispatch} from "redux";
 
 /**
  * 发送短信验证码
  * @param {string} mobile 手机号码
  * @returns thunk
  */
-export const sendCode = (mobile) => {
-    return async (dispatch) => {
+export const sendCode = (mobile:number | string) => {
+    return async (dispatch:Dispatch) => {
       const res=await http.get(`/sms/codes/${mobile}`)
         console.log(res);
     }
 }
 
+type Token = {
+    token: string
+    refresh_token: string
+}
 //保存token到redux中
-export const saveToken=(tokenInfo)=>{
+export const saveToken=(tokenInfo:Token)=>{
     return {
         type: 'login/token',
         payload: tokenInfo
@@ -26,8 +31,8 @@ export const saveToken=(tokenInfo)=>{
  * @param params
  * @returns {(function(*): Promise<void>)|*}
  */
-export const login = params => {
-    return async dispatch => {
+export const login = (params:{ mobile: string; code: string }) => {
+    return async (dispatch:Dispatch) => {
         const res = await http.post('/authorizations', params)
         //保存token到redux中
         dispatch(saveToken(res.data))
@@ -41,7 +46,7 @@ export const login = params => {
  * @returns
  */
 export const logout = () => {
-    return (dispatch) => {
+    return (dispatch:Dispatch) => {
         removeTokenInfo()
         dispatch({
             type: 'login/logout',
