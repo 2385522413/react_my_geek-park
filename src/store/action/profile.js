@@ -57,7 +57,7 @@ export const updateProfile = (data) => {
         const res = await http.patch('/user/profile', data)
         console.log(res)
         // 更新成功
-        if (res.data.message === 'OK') {
+        if (res.message === 'OK') {
             dispatch(getProfile())
         }
     }
