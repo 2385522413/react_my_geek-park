@@ -1,11 +1,12 @@
 import http from "@/utils/http"
-
+import { User, Profile, ProfileAction } from '../reducers/profile'
+import { Dispatch } from 'redux'
 /**
  * 设置个人基本信息
  * @param {*} user
  * @returns
  */
-export const setUser = user => {
+export const setUser = (user:User):ProfileAction => {
     return {
         type: 'profile/user',
         payload: user
@@ -17,7 +18,7 @@ export const setUser = user => {
  * @returns thunk
  */
 export const getUser = () => {
-    return async dispatch => {
+    return async (dispatch:Dispatch) => {
         const res = await http.get('/user')
         dispatch(setUser(res.data))
     }
@@ -28,7 +29,7 @@ export const getUser = () => {
  * @param {*} user
  * @returns
  */
-export const saveProfile = payload => {
+export const saveProfile = (payload:Profile):ProfileAction => {
     return {
         type: 'profile/profile',
         payload
@@ -40,7 +41,7 @@ export const saveProfile = payload => {
  * @returns thunk
  */
 export const getProfile = () => {
-    return async dispatch => {
+    return async (dispatch:Dispatch) => {
         const res = await http.get('/user/profile')
         dispatch(saveProfile(res.data))
     }
@@ -52,10 +53,11 @@ export const getProfile = () => {
  * @param {属性值} value 要修改的属性值
  * @returns thunk
  */
-export const updateProfile = (data) => {
-    return async dispatch => {
-        const res = await http.patch('/user/profile', data)
-        console.log(res)
+// 返回一个全部属性变成可选的类型
+type PartialProfile = Partial<Profile>
+export const updateProfile = (data:PartialProfile) => {
+    return async (dispatch:any) => {
+        const res:{message:string}= await http.patch('/user/profile', data)
         // 更新成功
         if (res.message === 'OK') {
             dispatch(getProfile())
@@ -63,8 +65,8 @@ export const updateProfile = (data) => {
     }
 }
 
-export const updateAvatar = (formData) => {
-    return async dispatch => {
+export const updateAvatar = (formData: FormData) => {
+    return async (dispatch:any) => {
         const res = await http.patch('/user/photo', formData)
         // 更新成功
         if (res.data.message === 'OK') {

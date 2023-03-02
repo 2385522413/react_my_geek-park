@@ -1,4 +1,4 @@
-type User = {
+export type User = {
     id: string
     name: string
     photo: string
@@ -8,7 +8,7 @@ type User = {
     like_count: number
 }
 
-type Profile = {
+export type Profile = {
     id: string
     photo: string
     name: string
@@ -21,7 +21,7 @@ type InitType = {
     user: User
     profile: Profile
 }
-type ProfileAction =
+export type ProfileAction =
 | {
     type: 'profile/user'
     payload: User
