@@ -11,7 +11,7 @@ import {Toast} from "antd-mobile";
 import {useHistory, useLocation} from "react-router-dom";
 
 function Login() {
-    const location=useLocation()
+    const location=useLocation<{from:string}>()
     const history = useHistory();
     const dispatch = useDispatch();
     //倒计时
