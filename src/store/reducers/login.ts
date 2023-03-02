@@ -1,3 +1,11 @@
+type Token = {
+    token: string
+    refresh_token: string
+}
+type ActionType = {
+    type: 'login/token' | 'login/logout'
+    payload: Token
+}
 // 初始状态
 const initialState = {
     token: '',
@@ -5,11 +13,11 @@ const initialState = {
 }
 
 // 操作 Token 状态信息的 reducer 函数
-export const login = (state = initialState, action) => {
+export const login = (state = initialState, action:ActionType) => {
     const { type, payload } = action
     switch (type) {
         case 'login/token': return { ...payload }
-        case 'login/logout': return {}
+        case 'login/logout': return {} as Token
         default: return state
     }
 
