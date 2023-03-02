@@ -4,11 +4,11 @@ import styles from "./index.module.scss";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {getUser} from "@/store/action/profile";
-
+import {RootState} from '@/store/index'
 const Profile = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const user = useSelector((state)=>state.profile.user);
+    const user = useSelector((state: RootState) => state.profile.user)
     // 在进入页面时执行
     useEffect(() => {
         dispatch(getUser())

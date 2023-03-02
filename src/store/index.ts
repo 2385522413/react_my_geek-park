@@ -12,5 +12,5 @@ const store = createStore(
     },
     composeWithDevTools(applyMiddleware(thunk))
 );
-
+export type RootState = ReturnType<typeof store.getState>
 export default store;
