@@ -1,15 +1,15 @@
-type Channel = {
+export type Channel = {
     id: number
     name: string
 }
 
-type FeedbackAction = {
+export type FeedbackAction = {
     visible: boolean
     articleId: string
     channelId: number
 }
 
-type Ariticle = {
+export type Ariticle = {
     art_id: string
     title: string
     aut_id: string
@@ -22,7 +22,7 @@ type Ariticle = {
     }
 }
 
-type Articles = {
+export type Articles = {
     [index: number]: {
         timestamp: string
         list: Ariticle[]
@@ -50,7 +50,7 @@ const initialState:HomeType = {
     }
 }
 
-type ActionType =
+export type HomeActionType =
     | {
     type: 'home/channel'
     payload: Channel[]
@@ -65,7 +65,7 @@ type ActionType =
         channelId: number
         timestamp: string
         list: Ariticle[],
-        loadMore:boolean
+        loadMore?:boolean
     }
 }
     | {
@@ -80,7 +80,7 @@ type ActionType =
     }
 }*/
 
-export const home = (state = initialState, action:ActionType) => {
+export const home = (state = initialState, action:HomeActionType) => {
     const { type, payload } = action
 
     switch (type) {
