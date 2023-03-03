@@ -1,6 +1,6 @@
 import axios, {AxiosError} from "axios";
 import {Toast} from "antd-mobile";
-import {getTokenInfo, setTokenInfo} from "@/utils/storage";
+import {getTokenInfo, removeTokenInfo, setTokenInfo} from "@/utils/storage";
 import store from "@/store";
 import {history} from "@/utils/history";
 import {logout, saveToken} from "@/store/action/login";
@@ -72,7 +72,11 @@ http.interceptors.response.use(response => {
             return http(err.config);
         } catch (error) {
             // 如果换取token失败
-            store.dispatch(logout());
+            removeTokenInfo()
+            store.dispatch(logout({
+                token: '',
+                refresh_token: '',
+            }));
             // 跳转到登录页，并携带上当前正在访问的页面，等登录成功后再跳回该页面
             history.replace("/login", {
                 from: history.location

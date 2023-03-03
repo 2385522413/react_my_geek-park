@@ -2,7 +2,7 @@ type Token = {
     token: string
     refresh_token: string
 }
-type ActionType = {
+export type LoginActionType = {
     type: 'login/token' | 'login/logout'
     payload: Token
 }
@@ -13,7 +13,7 @@ const initialState = {
 }
 
 // 操作 Token 状态信息的 reducer 函数
-export const login = (state = initialState, action:ActionType) => {
+export const login = (state = initialState, action:LoginActionType) => {
     const { type, payload } = action
     switch (type) {
         case 'login/token': return { ...payload }
