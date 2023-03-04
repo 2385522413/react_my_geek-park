@@ -9,10 +9,11 @@ import {Drawer} from "antd-mobile";
 import ArticleList from "@/pages/Home/compoents/ArticleList";
 import FeedbackActionMenu from "@/pages/Home/compoents/FeedbackActionMenu";
 import {RootState} from "@/store";
+import {useHistory} from "react-router-dom";
 
 
 function Home() {
-
+     const history=useHistory()
     // 处理频道高亮
     const [active, setActive] = useState(0);
 
@@ -46,7 +47,7 @@ function Home() {
             </Tabs>
             {/* 频道 Tab 栏右侧的两个图标按钮：搜索、频道管理 */}
             <div className="tabs-opration">
-                <Icon type="iconbtn_search"/>
+                <Icon type="iconbtn_search" onClick={()=>{history.push('/search')}}/>
                 <Icon type="iconbtn_channel" onClick={() => {
                     setDrawerVisible(true);
                 }}/>
