@@ -8,12 +8,15 @@ import Channels from "@/pages/Home/compoents/Channels";
 import {Drawer} from "antd-mobile";
 import ArticleList from "@/pages/Home/compoents/ArticleList";
 import FeedbackActionMenu from "@/pages/Home/compoents/FeedbackActionMenu";
-function Home(props) {
+import {RootState} from "@/store";
+
+
+function Home() {
 
     // 处理频道高亮
     const [active, setActive] = useState(0);
 
-    const changeActive = (index) => {
+    const changeActive = (index:number) => {
         setActive(index);
         dispatch(setFeedbackAction({
             visible:false,
@@ -28,7 +31,7 @@ function Home(props) {
     const onClose = () => {
         setDrawerVisible(false);
     };
-    const tabs = useSelector((state) => state.home.userChannels);
+    const tabs = useSelector((state:RootState) => state.home.userChannels);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getUserChannels());
@@ -50,14 +53,14 @@ function Home(props) {
             </div>
             {/* 频道管理抽屉 */}
             <Drawer
-                className="my-drawer"
+                // @ts-ignore
                 children={""}
-                sidebar={drawerVisible && <Channels onClose={onClose}
-                                                    index={active}
+                className="my-drawer"
+                // @ts-ignore
+                sidebar={drawerVisible && <Channels onClose={onClose} index={active}
                                                     onChange={changeActive}
-                />}
-                open={drawerVisible}
-            />
+                /> }
+                open={drawerVisible}></Drawer>
             <FeedbackActionMenu></FeedbackActionMenu>
         </div>
 
