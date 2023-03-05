@@ -1,6 +1,7 @@
 type SearchType = {
     suggestions: string[]
     historys: string[]
+    results: string[]
 }
 type SearchAction = {
     type: 'search/saveSuggestions'
@@ -12,10 +13,15 @@ type SearchAction = {
     payload: string[]
 } | {
     type: 'search/clearHistories'
-}
+} | {
+    type: 'search/saveResults'
+    payload:string[]
+};
 const initialState: SearchType = {
     suggestions: [],
-    historys: []
+    historys: [],
+    // 存放搜索的结果
+    results: [],
 }
 export const search = (state = initialState, action: SearchAction) => {
     switch (action.type) {
@@ -38,6 +44,11 @@ export const search = (state = initialState, action: SearchAction) => {
             return {
                 ...state,
                 historys: []
+            }
+        case 'search/saveResults' :
+            return {
+                ...state,
+                results: action.payload,
             }
         default:
             return state

@@ -11,7 +11,8 @@ const store = createStore(
         login: getTokenInfo(),
         search:{
             suggestions:[],
-            historys:getLocalHistories()
+            historys:getLocalHistories(),
+            results:[]
         }
     },
     composeWithDevTools(applyMiddleware(thunk))

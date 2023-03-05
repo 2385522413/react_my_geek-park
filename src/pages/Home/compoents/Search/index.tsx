@@ -31,8 +31,10 @@ const Search = () => {
     }
     //搜索
     const onSearch=(keyword:string)=>{
-        console.log(keyword)
+        // console.log(keyword)
         dispatch(addSearchList(keyword))
+         //跳转搜索页
+        history.push('/search/result?key=' + key)
     }
     //清空输入框
     const onClose=()=>{

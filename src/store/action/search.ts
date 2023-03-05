@@ -1,6 +1,7 @@
 import {RootThunkAction} from "@/store";
 import http from "@/utils/http";
 import {removeLocalHistories, setLocalHistories} from "@/utils/storage";
+import {Ariticle} from "@/store/reducers/home";
 
 export function getSuggestList(keyword: string): RootThunkAction {
     return async(dispatch)=>{
@@ -58,6 +59,34 @@ export function clearHistories(): RootThunkAction {
         // 清空redux数据
         dispatch({
             type: 'search/clearHistories',
+        })
+    }
+}
+
+/**
+ * 获取搜索结果数据
+ */
+type ResultRes={
+    page:number
+    per_page:number
+    results:Ariticle[]
+    total_count:number
+}
+export function getSearchResults(
+    keyword: string,
+    page: number
+): RootThunkAction {
+    return async (dispatch) => {
+        const res = await http.get<ResultRes>('search', {
+            params: {
+                q: keyword,
+                page,
+                per_page: 10,
+            },
+        })
+        dispatch({
+            type: 'search/saveResults',
+            payload: res.data.results,
         })
     }
 }
