@@ -4,20 +4,34 @@ import classnames from 'classnames'
 import {useHistory} from 'react-router'
 import styles from './index.module.scss'
 import {useEffect, useRef, useState} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getSuggestList} from "@/store/action/search";
+import {RootState} from "@/store";
 
 const Search = () => {
     const history = useHistory()
     const [key, setKey] = useState('')
     const timeRef = useRef(-1)
-    const dispatch=useDispatch()
+    const dispatch = useDispatch()
+    //高亮处理
+    const highLight=(str:string,keyword:string)=>{
+        const reg=new RegExp(keyword,'gi')
+        return str.replace(reg, (match) => {
+            return `<span style="color: red;">${match}</span>`
+        })
+    }
+
+    const suggestions = useSelector((state: RootState) => {
+        return state.search.suggestions
+    })
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const text = e.target.value
         clearInterval(timeRef.current)
         setKey(text)
         timeRef.current = window.setTimeout(() => {
-            dispatch(getSuggestList(text));
+            if (text) {
+                dispatch(getSuggestList(text));
+            }
         }, 500)
     }
     useEffect(() => {
@@ -75,12 +89,16 @@ const Search = () => {
 
             {/* 搜素建议结果列表 */}
             <div className={classnames('search-result', 'show')}>
-                <div className="result-item">
-                    <Icon className="icon-search" type="iconbtn_search"/>
-                    <div className="result-value">
-                        <span>{'高亮'}</span>{`其余`}
-                    </div>
-                </div>
+                {suggestions.map((item, index) => {
+                    return (
+                        <div className="result-item" key={index}>
+                            <Icon className="icon-search" type="iconbtn_search" />
+                            <div className="result-value"
+                                 dangerouslySetInnerHTML={{ __html: highLight(item, key) }}
+                            ></div>
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )

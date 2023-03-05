@@ -9,9 +9,13 @@ export function getSuggestList(keyword: string): RootThunkAction {
                 q: keyword
             }
         })
+        let options=res.data.options
+        if (!options[0]) {
+            options=[]
+        }
         dispatch({
             type:'search/saveSuggestions',
-            payload:res.data.options
-        })
+            payload:options
+        });
     }
 }
