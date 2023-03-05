@@ -1,12 +1,30 @@
 import Icon from '@/components/Icon'
 import NavBar from '@/components/NavBar'
 import classnames from 'classnames'
-import { useHistory } from 'react-router'
+import {useHistory} from 'react-router'
 import styles from './index.module.scss'
+import {useEffect, useRef, useState} from "react";
+import {useDispatch} from "react-redux";
+import {getSuggestList} from "@/store/action/search";
 
 const Search = () => {
     const history = useHistory()
-
+    const [key, setKey] = useState('')
+    const timeRef = useRef(-1)
+    const dispatch=useDispatch()
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const text = e.target.value
+        clearInterval(timeRef.current)
+        setKey(text)
+        timeRef.current = window.setTimeout(() => {
+            dispatch(getSuggestList(text));
+        }, 500)
+    }
+    useEffect(() => {
+        return () => {
+            clearInterval(timeRef.current)
+        }
+    }, [])
     return (
         <div className={styles.root}>
             {/* 顶部导航栏 */}
@@ -18,24 +36,24 @@ const Search = () => {
                 }
             >
                 <div className="navbar-search">
-                    <Icon type="iconbtn_search" className="icon-search" />
+                    <Icon type="iconbtn_search" className="icon-search"/>
 
                     <div className="input-wrapper">
                         {/* 输入框 */}
-                        <input type="text" placeholder="请输入关键字搜索" />
+                        <input type="text" placeholder="请输入关键字搜索" value={key} onChange={onChange}/>
 
                         {/* 清空输入框按钮 */}
-                        <Icon type="iconbtn_tag_close" className="icon-close" />
+                        <Icon type="iconbtn_tag_close" className="icon-close"/>
                     </div>
                 </div>
             </NavBar>
 
             {/* 搜索历史 */}
-            <div className="history" style={{ display: 'block' }}>
+            <div className="history" style={{display: 'block'}}>
                 <div className="history-header">
                     <span>搜索历史</span>
                     <span>
-            <Icon type="iconbtn_del" />清除全部
+            <Icon type="iconbtn_del"/>清除全部
           </span>
                 </div>
 
@@ -58,7 +76,7 @@ const Search = () => {
             {/* 搜素建议结果列表 */}
             <div className={classnames('search-result', 'show')}>
                 <div className="result-item">
-                    <Icon className="icon-search" type="iconbtn_search" />
+                    <Icon className="icon-search" type="iconbtn_search"/>
                     <div className="result-value">
                         <span>{'高亮'}</span>{`其余`}
                     </div>
