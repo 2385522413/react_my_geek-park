@@ -4,20 +4,24 @@ type SearchType={
 type SearchAction={
     type:'search/saveSuggestions'
     payload:string[]
+}|{
+    type:'search/clearSuggestions'
 }
 const initialState:SearchType = {
     suggestions: [],
 }
 export const search = (state = initialState, action:SearchAction) => {
-    const { type, payload } = action
-
-    switch (type) {
+    switch (action.type) {
         case 'search/saveSuggestions':
             return {
                 ...state,
-                suggestions: payload
+                suggestions: action.payload
             }
-
+        case 'search/clearSuggestions':
+            return {
+                ...state,
+                suggestions: []
+            }
         default:
             return state
     }

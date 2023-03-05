@@ -5,14 +5,22 @@ import {useHistory} from 'react-router'
 import styles from './index.module.scss'
 import {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getSuggestList} from "@/store/action/search";
+import {clearSuggestions, getSuggestList} from "@/store/action/search";
 import {RootState} from "@/store";
 
 const Search = () => {
     const history = useHistory()
     const [key, setKey] = useState('')
+    const [isSearching, setIsSearching] = useState(false)
     const timeRef = useRef(-1)
     const dispatch = useDispatch()
+    //清空输入框
+    const onClose=()=>{
+        setKey('');
+        setIsSearching(false);
+        //清楚redux数据
+        dispatch(clearSuggestions())
+    }
     //高亮处理
     const highLight=(str:string,keyword:string)=>{
         const reg=new RegExp(keyword,'gi')
@@ -30,7 +38,10 @@ const Search = () => {
         setKey(text)
         timeRef.current = window.setTimeout(() => {
             if (text) {
+                setIsSearching(true)
                 dispatch(getSuggestList(text));
+            }else {
+                setIsSearching(false)
             }
         }, 500)
     }
@@ -57,13 +68,15 @@ const Search = () => {
                         <input type="text" placeholder="请输入关键字搜索" value={key} onChange={onChange}/>
 
                         {/* 清空输入框按钮 */}
-                        <Icon type="iconbtn_tag_close" className="icon-close"/>
+                        <Icon type="iconbtn_tag_close" className="icon-close" onClick={()=>{
+                            onClose()
+                        }}/>
                     </div>
                 </div>
             </NavBar>
 
             {/* 搜索历史 */}
-            <div className="history" style={{display: 'block'}}>
+            <div className="history" style={{display: isSearching?'none':'block'}}>
                 <div className="history-header">
                     <span>搜索历史</span>
                     <span>
@@ -88,7 +101,7 @@ const Search = () => {
             </div>
 
             {/* 搜素建议结果列表 */}
-            <div className={classnames('search-result', 'show')}>
+            <div className={classnames('search-result', isSearching?'show':false)}>
                 {suggestions.map((item, index) => {
                     return (
                         <div className="result-item" key={index}>

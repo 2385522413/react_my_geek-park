@@ -19,3 +19,9 @@ export function getSuggestList(keyword: string): RootThunkAction {
         });
     }
 }
+
+export function clearSuggestions(){
+    return {
+        type: 'search/clearSuggestions',
+    }
+}
