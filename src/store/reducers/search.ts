@@ -48,7 +48,7 @@ export const search = (state = initialState, action: SearchAction) => {
         case 'search/saveResults' :
             return {
                 ...state,
-                results: action.payload,
+                results: [...state.results,...action.payload],
             }
         default:
             return state
