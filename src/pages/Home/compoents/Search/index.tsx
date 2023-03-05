@@ -5,8 +5,9 @@ import {useHistory} from 'react-router'
 import styles from './index.module.scss'
 import {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {clearSuggestions, getSuggestList} from "@/store/action/search";
+import {addSearchList, clearHistories, clearSuggestions, getSuggestList} from "@/store/action/search";
 import {RootState} from "@/store";
+import {Dialog} from "antd-mobile-v5";
 
 const Search = () => {
     const history = useHistory()
@@ -14,6 +15,25 @@ const Search = () => {
     const [isSearching, setIsSearching] = useState(false)
     const timeRef = useRef(-1)
     const dispatch = useDispatch()
+    const {suggestions,historys} = useSelector((state: RootState) => {
+        return state.search
+    })
+    //清空历史记录
+    const onClearHistory=()=>{
+        // 清空历史记录
+        Dialog.confirm({
+            title: '温馨提示',
+            content: '你确定要清空记录吗？',
+            onConfirm: function () {
+                dispatch(clearHistories())
+            },
+        })
+    }
+    //搜索
+    const onSearch=(keyword:string)=>{
+        console.log(keyword)
+        dispatch(addSearchList(keyword))
+    }
     //清空输入框
     const onClose=()=>{
         setKey('');
@@ -29,9 +49,6 @@ const Search = () => {
         })
     }
 
-    const suggestions = useSelector((state: RootState) => {
-        return state.search.suggestions
-    })
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const text = e.target.value
         clearInterval(timeRef.current)
@@ -57,7 +74,7 @@ const Search = () => {
                 className="navbar"
                 onLeftClick={() => history.go(-1)}
                 extra={
-                    <span className="search-text">搜索</span>
+                    <span className="search-text"  onClick={() => onSearch(key)}>搜索</span>
                 }
             >
                 <div className="navbar-search">
@@ -79,24 +96,23 @@ const Search = () => {
             <div className="history" style={{display: isSearching?'none':'block'}}>
                 <div className="history-header">
                     <span>搜索历史</span>
-                    <span>
-            <Icon type="iconbtn_del"/>清除全部
-          </span>
+                    <span onClick={onClearHistory}>
+                        <Icon type="iconbtn_del"/>清除全部
+                     </span>
                 </div>
 
                 <div className="history-list">
-          <span className="history-item">
-            Python生成九宫格图片<span className="divider"></span>
-          </span>
-                    <span className="history-item">
-            Python<span className="divider"></span>
-          </span>
-                    <span className="history-item">
-            CSS<span className="divider"></span>
-          </span>
-                    <span className="history-item">
-            数据分析<span className="divider"></span>
-          </span>
+                    {historys.map((item, index) => {
+                        return (
+                            <span
+                                className="history-item"
+                                key={index}
+                                onClick={() => onSearch(item)}
+                            >
+                              {index !== 0 && <span className="divider"></span>}{item}
+                             </span>
+                        )
+                    })}
                 </div>
             </div>
 
@@ -104,8 +120,8 @@ const Search = () => {
             <div className={classnames('search-result', isSearching?'show':false)}>
                 {suggestions.map((item, index) => {
                     return (
-                        <div className="result-item" key={index}>
-                            <Icon className="icon-search" type="iconbtn_search" />
+                        <div className="result-item" key={index}  onClick={()=>{onSearch(item)}}>
+                            <Icon className="icon-search" type="iconbtn_search"/>
                             <div className="result-value"
                                  dangerouslySetInnerHTML={{ __html: highLight(item, key) }}
                             ></div>

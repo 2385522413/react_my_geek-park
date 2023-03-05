@@ -2,13 +2,17 @@ import {applyMiddleware, createStore,AnyAction} from "redux";
 import {composeWithDevTools} from "redux-devtools-extension";
 import thunk, {ThunkAction} from "redux-thunk";
 import rootReducer from "./reducers";
-import {getTokenInfo} from "@/utils/storage";
+import {getLocalHistories, getTokenInfo} from "@/utils/storage";
 
 // 参数二：初始化时要加载的状态   参数三中间件
 const store = createStore(
     rootReducer,
     {
-        login: getTokenInfo()
+        login: getTokenInfo(),
+        search:{
+            suggestions:[],
+            historys:getLocalHistories()
+        }
     },
     composeWithDevTools(applyMiddleware(thunk))
 );
