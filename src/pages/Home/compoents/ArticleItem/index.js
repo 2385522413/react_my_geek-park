@@ -7,10 +7,12 @@ import "dayjs/locale/zh-cn";
 import dayjs from "dayjs";
 import {useDispatch, useSelector} from "react-redux";
 import {setFeedbackAction} from "@/store/action/home";
+import {useHistory} from "react-router-dom";
 
 dayjs.extend(relativeTime);
 dayjs.locale("zh-cn");
 const ArticleItem = ({article,channelId}) => {
+    const history = useHistory()
     const dispatch=useDispatch()
     const {
         cover: {type, images},
@@ -21,7 +23,9 @@ const ArticleItem = ({article,channelId}) => {
     } = article;
     const isLogin = useSelector((state) => !!state.login.token);
     return (
-        <div className={styles.root}>
+        <div className={styles.root} onClick={()=>{
+            history.push('/article/'+article.art_id)
+        }}>
             <div
                 className={classnames(
                     "article-content",

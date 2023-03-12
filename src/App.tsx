@@ -11,6 +11,7 @@ const NotFound = React.lazy(() => import("@/pages/NotFound"));
 const Feedback = React.lazy(() => import("@/pages/Profile/Feedback"));
 const Search = React.lazy(() => import("@/pages/Home/compoents/Search"));
 const SearchResult = React.lazy(() => import("@/pages/Home/compoents/Search/Result"));
+const Article = React.lazy(() => import("@/pages/Article"));
 
 export default function App() {
     return (
@@ -25,6 +26,8 @@ export default function App() {
                         <Route path="/home" component={Layout}></Route>
                         <Route path="/search" exact component={Search}></Route>
                         <Route path="/search/result" exact component={SearchResult}></Route>
+                        <Route path="/article/:id" exact component={Article}></Route>
+
                         <AuthRoute path="/profile/edit" component={ProfileEdit}></AuthRoute>
                         <AuthRoute path="/profile/chat" component={Chat}></AuthRoute>
                         <AuthRoute path="/profile/Feedback" component={Feedback}></AuthRoute>
