@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import classNames from "classnames";
 import {throttle} from "lodash";
 import NoComment from "@/pages/Article/components/NoComment";
+import CommentItem from "@/pages/Article/components/CommentItem";
 
 const Article = () => {
     const history = useHistory()
@@ -19,6 +20,10 @@ const Article = () => {
     const info = useSelector((state: RootState) => {
         // @ts-ignore
         return state.article.info
+    })
+    const comment = useSelector((state: RootState) => {
+        // @ts-ignore
+        return state.article.comment
     })
 
     // 获取动态路由参数
@@ -123,7 +128,21 @@ const Article = () => {
                                 </div>
                             </div>
                         </div>
-                        <NoComment></NoComment>
+                        <div className="comment">
+                            {/* 评论总览信息 */}
+                            <div className="comment-header">
+                                <span>全部评论（{info.comm_count}）</span>
+                                <span>{info.like_count} 点赞</span>
+                            </div>
+                            {/* 评论列表 */}
+                            {info.comm_count === 0 ? (
+                                <NoComment></NoComment>
+                            ) : (
+                                comment.results?.map((item:any) => (
+                                    <CommentItem key={item.com_id} comment={item}></CommentItem>
+                                ))
+                            )}
+                        </div>
                     </div>
                 </>
             </div>

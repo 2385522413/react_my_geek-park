@@ -2,15 +2,11 @@ import classnames from "classnames";
 import Icon from "@/components/Icon";
 import styles from "./index.module.scss";
 import Img from "@/components/Image";
-import relativeTime from "dayjs/plugin/relativeTime";
-import "dayjs/locale/zh-cn";
 import dayjs from "dayjs";
 import {useDispatch, useSelector} from "react-redux";
 import {setFeedbackAction} from "@/store/action/home";
 import {useHistory} from "react-router-dom";
 
-dayjs.extend(relativeTime);
-dayjs.locale("zh-cn");
 const ArticleItem = ({article,channelId}) => {
     const history = useHistory()
     const dispatch=useDispatch()

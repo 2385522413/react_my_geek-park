@@ -14,7 +14,7 @@ type Detail = {
     read_count: number
     title: string
 }
-type Comment = {
+export type Comment = {
     aut_id: string
     aut_name: string
     aut_photo: string
