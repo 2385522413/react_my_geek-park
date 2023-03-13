@@ -5,10 +5,12 @@ import styles from './index.module.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef, useState} from "react";
 import {useParams} from 'react-router'
-import {getArticleInfo} from "@/store/action/article";
+import {getArticleComments, getArticleInfo} from "@/store/action/article";
 import {RootState} from "@/store";
 import dayjs from "dayjs";
 import classNames from "classnames";
+import {throttle} from "lodash";
+import NoComment from "@/pages/Article/components/NoComment";
 
 const Article = () => {
     const history = useHistory()
@@ -23,26 +25,34 @@ const Article = () => {
     const articleId = Params.id
 
     useEffect(() => {
+        //获取文章信息
         dispatch(getArticleInfo(articleId))
-    })
+
+        // 请求评论列表数据
+        dispatch(getArticleComments({
+            type: 'a',
+            source: articleId
+        }))
+    },[dispatch,articleId])
+
     // 是否显示顶部信息
     const [isShowAuthor, setIsShowAuthor] = useState(false)
     const authorRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
-        const onScroll = function () {
+        const onScroll = throttle(function () {
             const rect = authorRef.current?.getBoundingClientRect()!
-            console.log(rect)
             if (rect.top <= 0) {
                 setIsShowAuthor(true)
             } else {
                 setIsShowAuthor(false)
             }
-        }
+        },300)
         document.addEventListener('scroll', onScroll)
         return () => {
             document.removeEventListener('scroll', onScroll)
         }
     }, [])
+
 
     return (
         <div className={styles.root}>
@@ -113,6 +123,7 @@ const Article = () => {
                                 </div>
                             </div>
                         </div>
+                        <NoComment></NoComment>
                     </div>
                 </>
             </div>
