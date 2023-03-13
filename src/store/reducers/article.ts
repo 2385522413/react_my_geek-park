@@ -43,6 +43,9 @@ type ArticleAction = {
 }|{
     type:'article/saveComment'
     payload:CommentType
+}|{
+    type:'article/saveMoreComment'
+    payload:CommentType
 }
 
 const initialState: ArticleType = {
@@ -63,6 +66,14 @@ export function article(state = initialState, action: ArticleAction) {
             return {
                 ...state,
                 comment: action.payload,
+            }
+        case 'article/saveMoreComment':
+            return {
+                ...state,
+                comment: {
+                    ...action.payload,
+                    results: [...state.comment.results, ...action.payload.results],
+                },
             }
         default:
             return state

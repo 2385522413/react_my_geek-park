@@ -38,3 +38,20 @@ export const getArticleComments = ({ type, source }:getArticleCommentsType):Root
         })
     }
 }
+
+// 获取文章的评论
+export function getMoreCommentList(id: string, offset: string): RootThunkAction {
+    return async (dispatch) => {
+        const res = await http.get('/comments', {
+            params: {
+                type: 'a',
+                source: id,
+                offset,
+            },
+        })
+        dispatch({
+            type: 'article/saveMoreComment',
+            payload: res.data,
+        })
+    }
+}

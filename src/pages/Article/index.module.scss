@@ -3,6 +3,7 @@
 .root {
   height: 100%;
   padding-top:46px;
+  padding-bottom:50px;
   :global {
     .navbar {
       position: fixed;
@@ -49,7 +50,7 @@
 
     .wrapper {
       flex: 1;
-      overflow-y: auto;
+      //overflow-y: auto;
       background-color: #f7f8fa;
     }
 

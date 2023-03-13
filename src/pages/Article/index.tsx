@@ -5,13 +5,15 @@ import styles from './index.module.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef, useState} from "react";
 import {useParams} from 'react-router'
-import {getArticleComments, getArticleInfo} from "@/store/action/article";
+import {getArticleComments, getArticleInfo, getMoreCommentList} from "@/store/action/article";
 import {RootState} from "@/store";
 import dayjs from "dayjs";
 import classNames from "classnames";
 import {throttle} from "lodash";
 import NoComment from "@/pages/Article/components/NoComment";
 import CommentItem from "@/pages/Article/components/CommentItem";
+import {InfiniteScroll} from "antd-mobile-v5";
+import CommentFooter from "@/pages/Article/components/CommentFooter";
 
 const Article = () => {
     const history = useHistory()
@@ -58,6 +60,10 @@ const Article = () => {
         }
     }, [])
 
+    const hasMore = comment.last_id !== comment.end_id
+    const loadMore = async () => {
+        await dispatch(getMoreCommentList(articleId, comment.last_id))
+    }
 
     return (
         <div className={styles.root}>
@@ -82,8 +88,8 @@ const Article = () => {
                                     info.is_followed ? 'followed' : ''
                                 )}
                             >
-        {info.is_followed ? '已关注' : '关注'}
-      </span>
+                             {info.is_followed ? '已关注' : '关注'}
+                             </span>
                         </div>
                     ) : (
                         ''
@@ -142,9 +148,11 @@ const Article = () => {
                                     <CommentItem key={item.com_id} comment={item}></CommentItem>
                                 ))
                             )}
+                            <InfiniteScroll loadMore={loadMore} hasMore={hasMore}></InfiniteScroll>
                         </div>
                     </div>
                 </>
+                <CommentFooter></CommentFooter>
             </div>
         </div>
     )
