@@ -6,8 +6,9 @@ import {collectAritcle, likeAritcle} from "@/store/action/article";
 
 type Props= {
     onShowComment?: () => void
+    onOpenShare?: () => void
 }
-const CommentFooter = ({onShowComment}:Props) => {
+const CommentFooter = ({onShowComment,onOpenShare}:Props) => {
     // @ts-ignore
     const info = useSelector((state: RootState) => state.article.info)
     //点赞
@@ -46,7 +47,7 @@ const CommentFooter = ({onShowComment}:Props) => {
                 />
                 <p>收藏</p>
             </div>
-            <div className="action-item">
+            <div className="action-item" onClick={onOpenShare}>
                 <Icon type="iconbtn_share" />
                 <p>分享</p>
             </div>

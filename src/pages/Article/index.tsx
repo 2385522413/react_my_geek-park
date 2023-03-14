@@ -14,6 +14,8 @@ import NoComment from "@/pages/Article/components/NoComment";
 import CommentItem from "@/pages/Article/components/CommentItem";
 import {InfiniteScroll} from "antd-mobile-v5";
 import CommentFooter from "@/pages/Article/components/CommentFooter";
+import {Drawer} from "antd-mobile";
+import Share from "@/pages/Article/components/Share";
 
 const Article = () => {
     const history = useHistory()
@@ -75,6 +77,25 @@ const Article = () => {
         }
         isShowComment.current = !isShowComment.current
     }
+    //分享
+    // 分享抽屉状态
+    const [shareDrawerStatus, setShareDrawerStatus] = useState({
+        visible: false
+    })
+
+// 打开分享抽屉
+    const onOpenShare = () => {
+        setShareDrawerStatus({
+            visible: true
+        })
+    }
+
+// 关闭分享抽屉
+    const onCloseShare = () => {
+        setShareDrawerStatus({
+            visible: false
+        })
+    }
 
     return (
         <div className={styles.root}>
@@ -84,7 +105,7 @@ const Article = () => {
                     className='navbar'
                     onLeftClick={() => history.go(-1)}
                     extra={
-                        <span>
+                        <span onClick={onOpenShare}>
                            <Icon type="icongengduo"/>
                         </span>
                     }
@@ -163,8 +184,21 @@ const Article = () => {
                         </div>
                     </div>
                 </>
-                <CommentFooter onShowComment={onShowComment}></CommentFooter>
+                <CommentFooter onShowComment={onShowComment} onOpenShare={onOpenShare}></CommentFooter>
             </div>
+            {/* 分享抽屉 */}
+            <Drawer
+                className="drawer-share"
+                position="bottom"
+                style={{ minHeight: document.documentElement.clientHeight }}
+                // @ts-ignore
+                children={' '}
+                sidebar={
+                    <Share onClose={onCloseShare} />
+                }
+                open={shareDrawerStatus.visible}
+                onOpenChange={onCloseShare}
+            />
         </div>
     )
 }
