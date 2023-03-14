@@ -55,3 +55,32 @@ export function getMoreCommentList(id: string, offset: string): RootThunkAction 
         })
     }
 }
+
+//点赞
+export function likeAritcle(id: string, attitude: number): RootThunkAction {
+    return async (dispatch) => {
+        if (attitude === 1) {
+            // 取消点赞
+            await http.delete('/article/likings/' + id)
+        } else {
+            // 点赞
+            await http.post('/article/likings', { target: id })
+        }
+        // 更新
+        await dispatch(getArticleInfo(id))
+    }
+}
+//收藏
+export function collectAritcle(id: string, isCollect: boolean): RootThunkAction {
+    return async (dispatch) => {
+        if (isCollect) {
+            // 取消点赞
+            await http.delete('/article/collections/' + id)
+        } else {
+            // 点赞
+            await http.post('/article/collections', { target: id })
+        }
+        // 更新
+        await dispatch(getArticleInfo(id))
+    }
+}

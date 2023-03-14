@@ -1,6 +1,6 @@
 import Icon from '@/components/Icon'
 import NavBar from '@/components/NavBar'
-import { useHistory } from 'react-router'
+import {useHistory} from 'react-router'
 import styles from './index.module.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef, useState} from "react";
@@ -40,7 +40,7 @@ const Article = () => {
             type: 'a',
             source: articleId
         }))
-    },[dispatch,articleId])
+    }, [dispatch, articleId])
 
     // 是否显示顶部信息
     const [isShowAuthor, setIsShowAuthor] = useState(false)
@@ -48,12 +48,12 @@ const Article = () => {
     useEffect(() => {
         const onScroll = throttle(function () {
             const rect = authorRef.current?.getBoundingClientRect()!
-            if (rect.top <= 0) {
+            if (rect && rect.top <= 0) {
                 setIsShowAuthor(true)
             } else {
                 setIsShowAuthor(false)
             }
-        },300)
+        }, 300)
         document.addEventListener('scroll', onScroll)
         return () => {
             document.removeEventListener('scroll', onScroll)
@@ -63,6 +63,17 @@ const Article = () => {
     const hasMore = comment.last_id !== comment.end_id
     const loadMore = async () => {
         await dispatch(getMoreCommentList(articleId, comment.last_id))
+    }
+    //评论跳转
+    const commentRef = useRef<HTMLDivElement>(null)
+    const isShowComment = useRef(false)
+    const onShowComment = () => {
+        if (isShowComment.current) {
+            window.scrollTo(0, 0);
+        } else {
+            window.scrollTo(0, commentRef.current!.offsetTop)
+        }
+        isShowComment.current = !isShowComment.current
     }
 
     return (
@@ -74,13 +85,13 @@ const Article = () => {
                     onLeftClick={() => history.go(-1)}
                     extra={
                         <span>
-                           <Icon type="icongengduo" />
+                           <Icon type="icongengduo"/>
                         </span>
                     }
                 >
                     {isShowAuthor ? (
                         <div className="nav-author">
-                            <img src={info.aut_photo} alt="" />
+                            <img src={info.aut_photo} alt=""/>
                             <span className="name">{info.aut_name}</span>
                             <span
                                 className={classNames(
@@ -110,7 +121,7 @@ const Article = () => {
                                 </div>
 
                                 <div className="author" ref={authorRef}>
-                                    <img src={info.aut_photo} alt="" />
+                                    <img src={info.aut_photo} alt=""/>
                                     <span className="name">{info.aut_name}</span>
                                     <span
                                         className={classNames(
@@ -127,14 +138,14 @@ const Article = () => {
                             <div className="content">
                                 <div
                                     className="content-html dg-html"
-                                    dangerouslySetInnerHTML={{ __html: info.content }}
+                                    dangerouslySetInnerHTML={{__html: info.content}}
                                 ></div>
                                 <div className="date">
                                     发布文章时间：{dayjs(info.pubdate).format('YYYY-MM-DD')}
                                 </div>
                             </div>
                         </div>
-                        <div className="comment">
+                        <div className="comment" ref={commentRef}>
                             {/* 评论总览信息 */}
                             <div className="comment-header">
                                 <span>全部评论（{info.comm_count}）</span>
@@ -144,7 +155,7 @@ const Article = () => {
                             {info.comm_count === 0 ? (
                                 <NoComment></NoComment>
                             ) : (
-                                comment.results?.map((item:any) => (
+                                comment.results?.map((item: any) => (
                                     <CommentItem key={item.com_id} comment={item}></CommentItem>
                                 ))
                             )}
@@ -152,7 +163,7 @@ const Article = () => {
                         </div>
                     </div>
                 </>
-                <CommentFooter></CommentFooter>
+                <CommentFooter onShowComment={onShowComment}></CommentFooter>
             </div>
         </div>
     )
