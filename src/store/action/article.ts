@@ -1,13 +1,13 @@
 import http from "@/utils/http";
 import {RootThunkAction} from "@/store";
 
-export function getArticleInfo(id: string):RootThunkAction {
+export function getArticleInfo(id: string): RootThunkAction {
     return async (dispatch) => {
         const res = await http.get(`/articles/${id}`)
         const info = res.data
         dispatch({
-            type:'article/setArticleInfo',
-            payload:info
+            type: 'article/setArticleInfo',
+            payload: info
         })
     }
 }
@@ -18,23 +18,23 @@ export function getArticleInfo(id: string):RootThunkAction {
  * @param {String} obj.source 评论ID
  * @returns thunk
  */
-type getArticleCommentsType={
-    type:string
-    source:string
+type getArticleCommentsType = {
+    type: string
+    source: string
 }
-export const getArticleComments = ({ type, source }:getArticleCommentsType):RootThunkAction => {
+export const getArticleComments = ({type, source}: getArticleCommentsType): RootThunkAction => {
     return async (dispatch) => {
         // 准备发送请求
 
         // 发送请求
         const res = await http.get('/comments', {
-            params: { type, source }
+            params: {type, source}
         })
         console.log(res)
         // 请求成功，保存数据
         dispatch({
-            type:'article/saveComment',
-            payload:res.data
+            type: 'article/saveComment',
+            payload: res.data
         })
     }
 }
@@ -64,12 +64,13 @@ export function likeAritcle(id: string, attitude: number): RootThunkAction {
             await http.delete('/article/likings/' + id)
         } else {
             // 点赞
-            await http.post('/article/likings', { target: id })
+            await http.post('/article/likings', {target: id})
         }
         // 更新
         await dispatch(getArticleInfo(id))
     }
 }
+
 //收藏
 export function collectAritcle(id: string, isCollect: boolean): RootThunkAction {
     return async (dispatch) => {
@@ -78,9 +79,27 @@ export function collectAritcle(id: string, isCollect: boolean): RootThunkAction 
             await http.delete('/article/collections/' + id)
         } else {
             // 点赞
-            await http.post('/article/collections', { target: id })
+            await http.post('/article/collections', {target: id})
         }
         // 更新
         await dispatch(getArticleInfo(id))
+    }
+}
+
+
+//发表评论
+export function onComment(articleId: string, content: string): RootThunkAction {
+    return async (dispatch,getState) => {
+
+        const res = await http.post('/comments',{
+            target:articleId,
+            content
+        })
+        dispatch({
+            type:'article/saveNewComment',
+            payload:res.data.new_obj
+        })
+        //@ts-ignore
+        dispatch(getArticleInfo(getState().article.info.art_id))
     }
 }

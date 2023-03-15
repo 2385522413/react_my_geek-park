@@ -5,7 +5,7 @@ import styles from './index.module.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef, useState} from "react";
 import {useParams} from 'react-router'
-import {getArticleComments, getArticleInfo, getMoreCommentList} from "@/store/action/article";
+import {getArticleComments, getArticleInfo, getMoreCommentList, onComment} from "@/store/action/article";
 import {RootState} from "@/store";
 import dayjs from "dayjs";
 import classNames from "classnames";
@@ -16,6 +16,7 @@ import {InfiniteScroll} from "antd-mobile-v5";
 import CommentFooter from "@/pages/Article/components/CommentFooter";
 import {Drawer} from "antd-mobile";
 import Share from "@/pages/Article/components/Share";
+import CommentInput from "@/pages/Article/components/CommentInput";
 
 const Article = () => {
     const history = useHistory()
@@ -47,6 +48,7 @@ const Article = () => {
     // 是否显示顶部信息
     const [isShowAuthor, setIsShowAuthor] = useState(false)
     const authorRef = useRef<HTMLDivElement>(null)
+    const wrapRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
         const onScroll = throttle(function () {
             const rect = authorRef.current?.getBoundingClientRect()!
@@ -56,9 +58,10 @@ const Article = () => {
                 setIsShowAuthor(false)
             }
         }, 300)
-        document.addEventListener('scroll', onScroll)
+        const wrap = wrapRef.current!
+        wrap.addEventListener('scroll', onScroll)
         return () => {
-            document.removeEventListener('scroll', onScroll)
+            wrap.removeEventListener('scroll', onScroll)
         }
     }, [])
 
@@ -70,10 +73,11 @@ const Article = () => {
     const commentRef = useRef<HTMLDivElement>(null)
     const isShowComment = useRef(false)
     const onShowComment = () => {
+        const wrap = wrapRef.current!
         if (isShowComment.current) {
-            window.scrollTo(0, 0);
+            wrap.scrollTo(0, 0);
         } else {
-            window.scrollTo(0, commentRef.current!.offsetTop)
+            wrap.scrollTo(0, commentRef.current!.offsetTop - 46)
         }
         isShowComment.current = !isShowComment.current
     }
@@ -96,7 +100,23 @@ const Article = () => {
             visible: false
         })
     }
+    // 评论抽屉状态
+    const [commentDrawerStatus, setCommentDrawerStatus] = useState({
+        visible: false,
+        id: 0
+    })
+    // 关闭评论抽屉表单
+    const onCloseComment = () => {
+        setCommentDrawerStatus({
+            visible: false,
+            id: 0
+        })
+    }
 
+// 发表评论后，插入到数据中
+    const addComment = (value: string) => {
+        dispatch(onComment(articleId, value))
+    }
     return (
         <div className={styles.root}>
             <div className="root-wrapper">
@@ -129,7 +149,7 @@ const Article = () => {
                 </NavBar>
 
                 <>
-                    <div className="wrapper">
+                    <div className="wrapper" ref={wrapRef}>
                         <div className="article-wrapper">
                             {/* 文章描述信息栏 */}
                             <div className="header">
@@ -184,20 +204,45 @@ const Article = () => {
                         </div>
                     </div>
                 </>
-                <CommentFooter onShowComment={onShowComment} onOpenShare={onOpenShare}></CommentFooter>
+                <CommentFooter onShowComment={onShowComment} onOpenShare={onOpenShare} onComment={() => {
+                    setCommentDrawerStatus({visible: true, id: 0})
+                }}></CommentFooter>
             </div>
             {/* 分享抽屉 */}
             <Drawer
                 className="drawer-share"
                 position="bottom"
-                style={{ minHeight: document.documentElement.clientHeight }}
+                style={{minHeight: document.documentElement.clientHeight}}
                 // @ts-ignore
                 children={' '}
                 sidebar={
-                    <Share onClose={onCloseShare} />
+                    <Share onClose={onCloseShare}/>
                 }
                 open={shareDrawerStatus.visible}
                 onOpenChange={onCloseShare}
+            />
+
+
+            {/* 评论抽屉 */}
+            <Drawer
+                className="drawer"
+                position="bottom"
+                style={{minHeight: document.documentElement.clientHeight}}
+                //@ts-ignore
+                children={''}
+                sidebar={
+                    <div className="drawer-sidebar-wrapper">
+                        {commentDrawerStatus.visible && (
+                            <CommentInput
+                                id={commentDrawerStatus.id}
+                                onClose={onCloseComment}
+                                addComment={addComment}
+                            />
+                        )}
+                    </div>
+                }
+                open={commentDrawerStatus.visible}
+                onOpenChange={onCloseComment}
             />
         </div>
     )

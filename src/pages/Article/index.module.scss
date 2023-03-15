@@ -1,16 +1,9 @@
 @import '@scss/hairline.scss';
 
 .root {
-  height: 100%;
-  padding-top:46px;
-  padding-bottom:50px;
+  height: 100vh;
   :global {
-    .navbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 999;
-    }
+
     .root-wrapper {
       position: relative;
       display: flex;
@@ -50,7 +43,7 @@
 
     .wrapper {
       flex: 1;
-      //overflow-y: auto;
+      overflow-y: auto;
       background-color: #f7f8fa;
     }
 
@@ -180,7 +173,7 @@
         font-weight: 500;
         color: #333;
         position: sticky;
-        top: 46px;
+        top: 0;
         z-index: 999;
         background: #fff;
 

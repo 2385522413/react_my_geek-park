@@ -7,8 +7,9 @@ import {collectAritcle, likeAritcle} from "@/store/action/article";
 type Props= {
     onShowComment?: () => void
     onOpenShare?: () => void
+    onComment?: () => void
 }
-const CommentFooter = ({onShowComment,onOpenShare}:Props) => {
+const CommentFooter = ({onShowComment,onOpenShare,onComment}:Props) => {
     // @ts-ignore
     const info = useSelector((state: RootState) => state.article.info)
     //点赞
@@ -22,7 +23,7 @@ const CommentFooter = ({onShowComment,onOpenShare}:Props) => {
     }
     return (
         <div className={styles.root}>
-            <div className="input-btn">
+            <div className="input-btn" onClick={onComment}>
                 <Icon type="iconbianji" />
                 <span>去评论</span>
             </div>
