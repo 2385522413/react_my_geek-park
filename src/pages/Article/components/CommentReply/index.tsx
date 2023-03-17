@@ -7,6 +7,8 @@ import CommentItem from "@/pages/Article/components/CommentItem";
 import {useEffect, useState} from "react";
 import http from "@/utils/http";
 import {InfiniteScroll} from "antd-mobile-v5";
+import {Drawer} from "antd-mobile";
+import CommentInput from "@/pages/Article/components/CommentInput";
 
 /**
  * 回复评论界面组件
@@ -53,6 +55,16 @@ const CommentReply = ({articleId, onClose, originComment}: Props) => {
             results: [...replyList.results,...res.data.results]
         })
     }
+    // 抽屉表单状态
+    const [drawerStatus, setDrawerStatus] = useState({
+        visible: false
+    })
+    // 关闭评论窗口
+    const onCloseComment = () => {
+        setDrawerStatus({
+            visible: false
+        })
+    }
     return (
         <div className={styles.root}>
             <div className="reply-wrapper">
@@ -82,9 +94,33 @@ const CommentReply = ({articleId, onClose, originComment}: Props) => {
                 </div>
 
                 {/* 评论工具栏，设置 type="reply" 不显示评论和点赞按钮 */}
-                <CommentFooter type='reply'/>
+                <CommentFooter type='reply' onComment={()=>{
+                 setDrawerStatus({
+                     visible: true
+                 })
+                }}/>
             </div>
-
+            {/* 评论表单抽屉 */}
+            <Drawer
+                className="drawer"
+                position="bottom"
+                style={{ minHeight: document.documentElement.clientHeight }}
+                //@ts-ignore
+                children={''}
+                sidebar={
+                    <div className="drawer-sidebar-wrapper">
+                        {drawerStatus.visible && (
+                            <CommentInput
+                                name={originComment.aut_name}
+                                articleId={articleId}
+                                onClose={onCloseComment}
+                            />
+                        )}
+                    </div>
+                }
+                open={drawerStatus.visible}
+                onOpenChange={onCloseComment}
+            />
         </div>
     )
 }
