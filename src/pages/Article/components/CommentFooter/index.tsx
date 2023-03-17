@@ -8,8 +8,9 @@ type Props= {
     onShowComment?: () => void
     onOpenShare?: () => void
     onComment?: () => void
+    type?:string
 }
-const CommentFooter = ({onShowComment,onOpenShare,onComment}:Props) => {
+const CommentFooter = ({onShowComment,onOpenShare,onComment,type='normal'}:Props) => {
     // @ts-ignore
     const info = useSelector((state: RootState) => state.article.info)
     //点赞
@@ -27,20 +28,22 @@ const CommentFooter = ({onShowComment,onOpenShare,onComment}:Props) => {
                 <Icon type="iconbianji" />
                 <span>去评论</span>
             </div>
-            <>
-                <div className="action-item" onClick={onShowComment}>
-                    <Icon type="iconbtn_comment" />
-                    <p>评论</p>
-                    <span className="bage">{info.comm_count}</span>
-                </div>
-                {/* 'iconbtn_like2' */}
-                <div className="action-item" onClick={onLike}>
-                    <Icon
-                        type={info.attitude === 1 ? 'iconbtn_like_sel' : 'iconbtn_like2'}
-                    />
-                    <p>点赞</p>
-                </div>
-            </>
+                {
+                    type==='reply'? null: (<>
+                        <div className="action-item" onClick={onShowComment}>
+                            <Icon type="iconbtn_comment" />
+                            <p>评论</p>
+                            <span className="bage">{info.comm_count}</span>
+                        </div>
+                        {/* 'iconbtn_like2' */}
+                        <div className="action-item" onClick={onLike}>
+                            <Icon
+                                type={info.attitude === 1 ? 'iconbtn_like_sel' : 'iconbtn_like2'}
+                            />
+                            <p>点赞</p>
+                        </div>
+                    </>)
+                }
             <div className="action-item" onClick={onCollected}>
                 {/* 'iconbtn_collect' */}
                 <Icon

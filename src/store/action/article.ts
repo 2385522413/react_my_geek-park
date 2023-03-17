@@ -30,7 +30,6 @@ export const getArticleComments = ({type, source}: getArticleCommentsType): Root
         const res = await http.get('/comments', {
             params: {type, source}
         })
-        console.log(res)
         // 请求成功，保存数据
         dispatch({
             type: 'article/saveComment',

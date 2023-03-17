@@ -10,7 +10,7 @@ import {LoginActionType} from '../reducers/login'
 export const sendCode = (mobile:number | string) => {
     return async (dispatch:Dispatch) => {
       const res=await http.get(`/sms/codes/${mobile}`)
-        console.log(res);
+        console.log(res)
     }
 }
 

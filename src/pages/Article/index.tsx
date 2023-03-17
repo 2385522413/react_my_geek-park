@@ -17,6 +17,7 @@ import CommentFooter from "@/pages/Article/components/CommentFooter";
 import {Drawer} from "antd-mobile";
 import Share from "@/pages/Article/components/Share";
 import CommentInput from "@/pages/Article/components/CommentInput";
+import CommentReply from "@/pages/Article/components/CommentReply";
 
 const Article = () => {
     const history = useHistory()
@@ -117,6 +118,25 @@ const Article = () => {
     const addComment = (value: string) => {
         dispatch(onComment(articleId, value))
     }
+
+    //回复
+    const[showReply,setShowReply]=useState({
+        visible: false,
+        originComment:{} as Comment
+    })
+    const onCloseReply=()=>{
+     setShowReply({
+         visible: false,
+         originComment:{} as Comment
+     })
+    }
+    const onShowReply=(comment:Comment)=>{
+        setShowReply({
+            visible: true,
+            originComment:comment
+        })
+    }
+
     return (
         <div className={styles.root}>
             <div className="root-wrapper">
@@ -197,7 +217,8 @@ const Article = () => {
                                 <NoComment></NoComment>
                             ) : (
                                 comment.results?.map((item: any) => (
-                                    <CommentItem key={item.com_id} comment={item}></CommentItem>
+                                    // @ts-ignore
+                                    <CommentItem onReply={onShowReply} key={item.com_id} comment={item}></CommentItem>
                                 ))
                             )}
                             <InfiniteScroll loadMore={loadMore} hasMore={hasMore}></InfiniteScroll>
@@ -243,6 +264,28 @@ const Article = () => {
                 }
                 open={commentDrawerStatus.visible}
                 onOpenChange={onCloseComment}
+            />
+
+            {/* 回复抽屉 */}
+            <Drawer
+                className="drawer-right"
+                position="right"
+                //@ts-ignore
+                children={''}
+                sidebar={
+                    <div className="drawer-sidebar-wrapper">
+                        {showReply.visible && (
+                            <CommentReply
+                                articleId={info.art_id}
+                                //@ts-ignore
+                                originComment={showReply.originComment}
+                                onClose={onCloseReply}
+                            />
+                        )}
+                    </div>
+                }
+                open={showReply.visible}
+                onOpenChange={onCloseReply}
             />
         </div>
     )

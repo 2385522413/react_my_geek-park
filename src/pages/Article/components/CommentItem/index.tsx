@@ -5,8 +5,10 @@ import dayjs from "dayjs";
 
 type Props = {
     comment: Comment
+    onReply?: (comment: Comment) => void
+    type?:string
 }
-const CommentItem = ({comment}: Props) => {
+const CommentItem = ({comment, onReply,type='normal'}: Props) => {
     return (
         <div className={styles.root}>
             {/* 评论者头像 */}
@@ -22,7 +24,7 @@ const CommentItem = ({comment}: Props) => {
                     {/* 关注或点赞按钮 */}
                     <span className="thumbs-up">
                       {comment.like_count}
-                        <Icon type={comment.is_liking?'iconbtn_like_sel':'iconbtn_like2'}/>
+                        <Icon type={comment.is_liking ? 'iconbtn_like_sel' : 'iconbtn_like2'}/>
                   </span>
                 </div>
 
@@ -31,10 +33,13 @@ const CommentItem = ({comment}: Props) => {
 
                 <div className="comment-footer">
                     {/* 回复按钮 */}
-
-                    <span className="replay">
+                    {
+                        type==='reply'? null:(
+                            <span className="replay" onClick={() =>onReply&& onReply(comment)}>
                         {comment.reply_count}回复 <Icon type="iconbtn_right"/>
                    </span>
+                        )
+                    }
 
                     {/* 评论日期 */}
                     <span className="comment-time">{dayjs(comment.pubdate).fromNow()}</span>
