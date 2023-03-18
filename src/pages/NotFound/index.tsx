@@ -9,7 +9,7 @@ const NotFound = () => {
   useEffect(() => {
     timerRef.current = setInterval(() => {
       if (leftSecond <= 1) {
-        return history.push('/home')
+        return history.push('/home/index')
       }
       setLeftSecond(leftSecond - 1)
     }, 1000)
@@ -21,7 +21,7 @@ const NotFound = () => {
     <div>
       <h1>对不起，你访问的内容不存在...</h1>
       <p>
-        {leftSecond} 秒后，返回<Link to="/home">首页</Link>
+        {leftSecond} 秒后，返回<Link to="/home/index">首页</Link>
       </p>
     </div>
   )

@@ -4,6 +4,7 @@ import styles from "./index.module.scss"
 import classnames from "classnames";
 import {Route, Switch, useHistory, useLocation} from "react-router-dom";
 import {AuthRoute} from "@/components/AuthRoute";
+import KeepAlive from "@/components/KeepAlive";
 
 
 const Home = React.lazy(() => import('@/pages/Home'))
@@ -17,7 +18,7 @@ const NotFound = React.lazy(() => import('@/pages/NotFound'))
 // - to 点击按钮后切换到的页面路径
 // - Icon 按钮上显示的图标名称
 const taBar = [
-    { id: 1, title: '首页', path: '/home', icon: 'iconbtn_home' },
+    { id: 1, title: '首页', path: '/home/index', icon: 'iconbtn_home' },
     { id: 2, title: '问答', path: '/home/question', icon: 'iconbtn_qa' },
     { id: 3, title: '视频', path: '/home/video', icon: 'iconbtn_video' },
     { id: 4, title: '我的', path: '/home/profile', icon: 'iconbtn_mine' }
@@ -34,8 +35,9 @@ function Layout() {
                 {/*配置二级路由*/}
                 <div className="tab-content">
                   <Suspense fallback={<div>loading</div>}>
+                      <KeepAlive component={Home} alivePath='/home/index' path='/home/index' exact></KeepAlive>
                       <Switch>
-                          <Route path="/home" exact component={Home} />
+                          {/*<Route path="/home" exact component={Home} />*/}
                           <Route path="/home/question" exact component={QA} />
                           <Route path="/home/video" exact component={Video} />
                           <AuthRoute path="/home/profile" exact component={Profile} />
