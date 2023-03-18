@@ -102,3 +102,10 @@ export function onComment(articleId: string, content: string): RootThunkAction {
         dispatch(getArticleInfo(getState().article.info.art_id))
     }
 }
+
+export function updateComment(comment: { aut_name: string; aut_photo: string; like_count: number; is_liking: boolean; aut_id: string; com_id: string; is_followed: boolean; reply_count: number; content: string; pubdate: string }){
+    return{
+        type:'article/updateComment',
+        payload:comment
+    }
+}

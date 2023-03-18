@@ -8,8 +8,9 @@ type Props = {
     articleId?: string
     addComment?: (value: string) => void
     onClose: () => void
+    onAddReply?: (name: string) => void
 }
-const CommentInput = ({id, name, onClose, addComment, articleId}: Props) => {
+const CommentInput = ({id, name, onClose, addComment, onAddReply, articleId}: Props) => {
     // 输入框内容
     const [value, setValue] = useState('')
 
@@ -26,8 +27,14 @@ const CommentInput = ({id, name, onClose, addComment, articleId}: Props) => {
     // 发表评论
     const onSendComment = async () => {
         if (!value) return
-        addComment && addComment(value)
-        onClose()
+
+        if (name) {
+            onAddReply && onAddReply(value);
+            onClose();
+        } else {
+            addComment && addComment(value)
+            onClose()
+        }
     }
 
     return (

@@ -37,7 +37,7 @@ type ArticleType = {
     info: Detail
     comment:CommentType
 }
-type ArticleAction = {
+export type ArticleAction = {
     type: 'article/setArticleInfo'
     payload: ArticleType
 }|{
@@ -48,6 +48,9 @@ type ArticleAction = {
     payload:CommentType
 }|{
     type:'article/saveNewComment'
+    payload:Comment
+}|{
+    type:'article/updateComment'
     payload:Comment
 }
 
@@ -84,6 +87,23 @@ export function article(state = initialState, action: ArticleAction) {
                 comment: {
                     ...state.comment,
                     results: [action.payload,...state.comment.results],
+                },
+            }
+        case 'article/updateComment':
+            return {
+                ...state,
+                comment: {
+                    ...state.comment,
+                    results: state.comment.results.map((item)=>{
+                        if (item.com_id === action.payload.com_id) {
+                            return {
+                                ...action.payload
+                            };
+                        } else {
+                            return item
+                        }
+
+                    })
                 },
             }
         default:
